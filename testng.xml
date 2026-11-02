@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="SauceDemo Test Suite">
+    <test name="Setup Tests">
+        <classes>
+            <class name="com.capstone.tests.SetupCheckTest"/>
+        </classes>
+    </test>
+</suite>
