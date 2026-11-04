@@ -1,3 +1,5 @@
+// ABOUTME: Provides explicit wait methods wrapping WebDriverWait.
+// ABOUTME: All dynamic element synchronization uses these methods instead of Thread.sleep.
 package com.capstone.utils;
 
 import org.openqa.selenium.By;
@@ -27,5 +29,13 @@ public class WaitUtils {
 
     public boolean waitForUrlContains(String text) {
         return wait.until(ExpectedConditions.urlContains(text));
+    }
+
+    public boolean waitForInvisible(By locator) {
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    public boolean waitForTextInElement(By locator, String text) {
+        return wait.until(ExpectedConditions.textToBePresentInElementLocated(locator, text));
     }
 }

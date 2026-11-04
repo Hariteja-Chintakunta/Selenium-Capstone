@@ -1,3 +1,5 @@
+// ABOUTME: Captures browser screenshots as files or byte arrays.
+// ABOUTME: Used by TestListener for automatic failure screenshots in Extent and Allure reports.
 package com.capstone.utils;
 
 import org.openqa.selenium.OutputType;
@@ -26,5 +28,9 @@ public class ScreenshotUtil {
             throw new RuntimeException("Screenshot failed", e);
         }
         return destination.toAbsolutePath().toString();
+    }
+
+    public static byte[] captureAsBytes(WebDriver driver) {
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 }

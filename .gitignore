@@ -1,5 +1,10 @@
+# ABOUTME: Git ignore rules for the saucedemo-automation project.
+# ABOUTME: Excludes build output, IDE files, and generated reports.
 target/
 .idea/
 *.iml
 screenshots/
 reports/
+allure-results/
+allure-report/
+test-output/

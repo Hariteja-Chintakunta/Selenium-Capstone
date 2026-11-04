@@ -1,3 +1,5 @@
+// ABOUTME: Loads and provides access to config.properties values.
+// ABOUTME: All test configuration (browser, URLs, credentials, timeouts) is read through this class.
 package com.capstone.utils;
 
 import java.io.IOException;

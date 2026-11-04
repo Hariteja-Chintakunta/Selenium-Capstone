@@ -1,3 +1,5 @@
+// ABOUTME: Page object for the saucedemo.com login page.
+// ABOUTME: Provides methods for valid login and login-expecting-error scenarios.
 package com.capstone.pages;
 
 import org.openqa.selenium.By;
@@ -21,7 +23,18 @@ public class LoginPage extends BasePage {
         return new ProductsPage(driver);
     }
 
+    public LoginPage loginExpectingError(String user, String pass) {
+        type(usernameField, user);
+        type(passwordField, pass);
+        click(loginButton);
+        return this;
+    }
+
     public String getErrorMessage() {
         return getText(errorMessage);
+    }
+
+    public boolean isErrorDisplayed() {
+        return isDisplayed(errorMessage);
     }
 }
