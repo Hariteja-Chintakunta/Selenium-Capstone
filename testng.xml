@@ -8,15 +8,10 @@
         <listener class-name="com.capstone.listeners.RetryTransformer"/>
     </listeners>
 
-    <test name="Smoke Tests">
-        <groups>
-            <run>
-                <include name="smoke"/>
-            </run>
-        </groups>
-        <packages>
-            <package name="com.capstone.tests"/>
-        </packages>
+    <test name="Setup Tests">
+        <classes>
+            <class name="com.capstone.tests.SetupCheckTest"/>
+        </classes>
     </test>
 
     <test name="Login Tests">
