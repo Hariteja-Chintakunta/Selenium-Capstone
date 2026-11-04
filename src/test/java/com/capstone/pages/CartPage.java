@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods to inspect cart items, remove products, and proceed to checkout.
 package com.capstone.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -38,16 +39,19 @@ public class CartPage extends BasePage {
                 .collect(Collectors.toList());
     }
 
+    @Step("Remove {name} from cart")
     public void removeItemByName(String name) {
         String buttonId = "remove-" + name.toLowerCase().replace(" ", "-");
         click(By.id(buttonId));
     }
 
+    @Step("Click continue shopping")
     public ProductsPage clickContinueShopping() {
         click(continueShoppingButton);
         return new ProductsPage(driver);
     }
 
+    @Step("Proceed to checkout")
     public CheckoutStepOnePage clickCheckout() {
         click(checkoutButton);
         return new CheckoutStepOnePage(driver);

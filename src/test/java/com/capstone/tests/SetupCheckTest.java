@@ -3,11 +3,20 @@
 package com.capstone.tests;
 
 import com.capstone.base.BaseTest;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Epic("SauceDemo")
+@Feature("Setup")
 public class SetupCheckTest extends BaseTest {
 
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Verify the browser loads saucedemo.com and the page title is Swag Labs")
     @Test(groups = {"smoke"})
     public void pageTitleIsSwagLabs() {
         Assert.assertEquals(driver.getTitle(), "Swag Labs");

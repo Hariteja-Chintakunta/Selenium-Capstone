@@ -5,13 +5,22 @@ package com.capstone.tests;
 import com.capstone.base.BaseTest;
 import com.capstone.pages.*;
 import com.capstone.utils.TestData;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
+@Epic("SauceDemo")
+@Feature("End-to-End")
 public class EndToEndTest extends BaseTest {
 
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify full purchase flow: login, add one item, checkout, and confirm order")
     @Test(groups = {"smoke", "regression"})
     public void fullPurchaseFlowSingleItem() {
         ProductsPage products = new LoginPage(driver)
@@ -31,6 +40,8 @@ public class EndToEndTest extends BaseTest {
                 "Should show order confirmation");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify full purchase flow with three items, verifying all appear in summary")
     @Test(groups = {"regression"})
     public void fullPurchaseFlowMultipleItems() {
         ProductsPage products = new LoginPage(driver)
@@ -55,6 +66,8 @@ public class EndToEndTest extends BaseTest {
                 "Should show order confirmation");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify checkout succeeds after adding two items and removing one")
     @Test(groups = {"regression"})
     public void addRemoveThenCheckout() {
         ProductsPage products = new LoginPage(driver)
@@ -80,6 +93,8 @@ public class EndToEndTest extends BaseTest {
                 "Should show order confirmation");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify clicking Back Home after checkout returns to the products page")
     @Test(groups = {"regression"})
     public void checkoutAndReturnToShop() {
         ProductsPage products = new LoginPage(driver)

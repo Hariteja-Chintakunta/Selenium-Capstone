@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods to fill the form, submit, cancel, and read validation errors.
 package com.capstone.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -18,12 +19,14 @@ public class CheckoutStepOnePage extends BasePage {
         super(driver);
     }
 
+    @Step("Fill checkout form: {firstName} {lastName} {zipCode}")
     public void fillForm(String firstName, String lastName, String zipCode) {
         type(firstNameField, firstName);
         type(lastNameField, lastName);
         type(zipCodeField, zipCode);
     }
 
+    @Step("Continue to checkout step two")
     public CheckoutStepTwoPage clickContinue() {
         click(continueButton);
         return new CheckoutStepTwoPage(driver);
@@ -34,6 +37,7 @@ public class CheckoutStepOnePage extends BasePage {
         return this;
     }
 
+    @Step("Cancel checkout")
     public CartPage clickCancel() {
         click(cancelButton);
         return new CartPage(driver);

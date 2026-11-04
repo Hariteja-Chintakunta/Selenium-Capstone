@@ -7,17 +7,26 @@ import com.capstone.pages.CartPage;
 import com.capstone.pages.LoginPage;
 import com.capstone.pages.ProductsPage;
 import com.capstone.utils.TestData;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
+@Epic("SauceDemo")
+@Feature("Shopping Cart")
 public class ShoppingCartTest extends BaseTest {
 
     private ProductsPage loginAndGetProductsPage() {
         return new LoginPage(driver).login(TestData.VALID_USER, TestData.VALID_PASSWORD);
     }
 
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify a single added product appears in the shopping cart")
     @Test(groups = {"smoke", "regression"})
     public void addSingleItemShowsInCart() {
         ProductsPage products = loginAndGetProductsPage();
@@ -30,6 +39,8 @@ public class ShoppingCartTest extends BaseTest {
                 "Cart should contain the added product: " + firstProduct);
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify adding two products results in cart count of two")
     @Test(groups = {"regression"})
     public void addMultipleItemsShowsCorrectCount() {
         ProductsPage products = loginAndGetProductsPage();
@@ -42,6 +53,8 @@ public class ShoppingCartTest extends BaseTest {
                 "Cart should contain 2 items");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify removing the only item leaves the cart empty")
     @Test(groups = {"regression"})
     public void removeItemFromCart() {
         ProductsPage products = loginAndGetProductsPage();
@@ -55,6 +68,8 @@ public class ShoppingCartTest extends BaseTest {
         Assert.assertTrue(cart.isCartEmpty(), "Cart should be empty after removal");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify cart item name and price match the product listing page")
     @Test(groups = {"regression"})
     public void cartItemDetailsMatchProductPage() {
         ProductsPage products = loginAndGetProductsPage();
@@ -70,6 +85,8 @@ public class ShoppingCartTest extends BaseTest {
                 "Cart item price should match product listing price");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify Continue Shopping button navigates back to the products page")
     @Test(groups = {"regression"})
     public void continueShoppingReturnsToProducts() {
         ProductsPage products = loginAndGetProductsPage();
@@ -81,6 +98,8 @@ public class ShoppingCartTest extends BaseTest {
                 "Should return to Products page");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify navigating to cart without adding products shows zero items")
     @Test(groups = {"regression"})
     public void emptyCartShowsNoItems() {
         ProductsPage products = loginAndGetProductsPage();
@@ -88,6 +107,8 @@ public class ShoppingCartTest extends BaseTest {
         Assert.assertEquals(cart.getCartItemCount(), 0, "Cart should be empty");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify cart badge appears on add and disappears on remove")
     @Test(groups = {"regression"})
     public void cartBadgeUpdatesOnAddAndRemove() {
         ProductsPage products = loginAndGetProductsPage();

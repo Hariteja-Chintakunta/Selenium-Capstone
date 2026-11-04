@@ -6,6 +6,11 @@ import com.capstone.base.BaseTest;
 import com.capstone.pages.LoginPage;
 import com.capstone.pages.ProductsPage;
 import com.capstone.utils.TestData;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -13,12 +18,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Epic("SauceDemo")
+@Feature("Product Listing")
 public class ProductListingTest extends BaseTest {
 
     private ProductsPage loginAndGetProductsPage() {
         return new LoginPage(driver).login(TestData.VALID_USER, TestData.VALID_PASSWORD);
     }
 
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify product listing page displays exactly 6 products")
     @Test(groups = {"smoke", "regression"})
     public void productCountIsSix() {
         ProductsPage products = loginAndGetProductsPage();
@@ -26,6 +35,8 @@ public class ProductListingTest extends BaseTest {
                 "Product count should be " + TestData.EXPECTED_PRODUCT_COUNT);
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify products are sorted alphabetically A-Z by default")
     @Test(groups = {"regression"})
     public void productsAreSortedByNameAToZByDefault() {
         ProductsPage products = loginAndGetProductsPage();
@@ -35,6 +46,8 @@ public class ProductListingTest extends BaseTest {
         Assert.assertEquals(names, sorted, "Products should be sorted A-Z by default");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify sort by Name Z-A produces reverse alphabetical order")
     @Test(groups = {"regression"})
     public void sortByNameZToA() {
         ProductsPage products = loginAndGetProductsPage();
@@ -45,6 +58,8 @@ public class ProductListingTest extends BaseTest {
         Assert.assertEquals(names, sorted, "Products should be sorted Z-A");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify sort by Price low-to-high produces ascending prices")
     @Test(groups = {"regression"})
     public void sortByPriceLowToHigh() {
         ProductsPage products = loginAndGetProductsPage();
@@ -55,6 +70,8 @@ public class ProductListingTest extends BaseTest {
         Assert.assertEquals(prices, sorted, "Prices should be sorted low to high");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify sort by Price high-to-low produces descending prices")
     @Test(groups = {"regression"})
     public void sortByPriceHighToLow() {
         ProductsPage products = loginAndGetProductsPage();
@@ -65,6 +82,8 @@ public class ProductListingTest extends BaseTest {
         Assert.assertEquals(prices, sorted, "Prices should be sorted high to low");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify no product has an empty name string")
     @Test(groups = {"regression"})
     public void productNamesAreNotEmpty() {
         ProductsPage products = loginAndGetProductsPage();
@@ -74,6 +93,8 @@ public class ProductListingTest extends BaseTest {
         }
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify all product prices are greater than zero")
     @Test(groups = {"regression"})
     public void productPricesArePositive() {
         ProductsPage products = loginAndGetProductsPage();

@@ -5,11 +5,18 @@ package com.capstone.tests;
 import com.capstone.base.BaseTest;
 import com.capstone.pages.*;
 import com.capstone.utils.TestData;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
+@Epic("SauceDemo")
+@Feature("Checkout")
 public class CheckoutTest extends BaseTest {
 
     private CartPage addItemAndGoToCart() {
@@ -20,6 +27,8 @@ public class CheckoutTest extends BaseTest {
         return products.goToCart();
     }
 
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify the full checkout flow completes with an order confirmation message")
     @Test(groups = {"smoke", "regression"})
     public void completeCheckoutShowsConfirmation() {
         CartPage cart = addItemAndGoToCart();
@@ -32,6 +41,8 @@ public class CheckoutTest extends BaseTest {
                 "Order confirmation message should be displayed");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify submitting an empty checkout form shows first name required error")
     @Test(groups = {"regression"})
     public void emptyFormShowsFirstNameError() {
         CartPage cart = addItemAndGoToCart();
@@ -42,6 +53,8 @@ public class CheckoutTest extends BaseTest {
                 "Should show first name required error");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify missing last name shows last name required error")
     @Test(groups = {"regression"})
     public void missingLastNameShowsError() {
         CartPage cart = addItemAndGoToCart();
@@ -53,6 +66,8 @@ public class CheckoutTest extends BaseTest {
                 "Should show last name required error");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify missing zip code shows postal code required error")
     @Test(groups = {"regression"})
     public void missingZipCodeShowsError() {
         CartPage cart = addItemAndGoToCart();
@@ -64,6 +79,8 @@ public class CheckoutTest extends BaseTest {
                 "Should show zip code required error");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify the order summary page lists all items added to the cart")
     @Test(groups = {"regression"})
     public void orderSummaryShowsCorrectItems() {
         ProductsPage products = new LoginPage(driver)
@@ -84,6 +101,8 @@ public class CheckoutTest extends BaseTest {
                 "Order summary should contain second item");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify total price equals item subtotal plus tax")
     @Test(groups = {"regression"})
     public void priceTotalCalculationIsCorrect() {
         CartPage cart = addItemAndGoToCart();
@@ -99,6 +118,8 @@ public class CheckoutTest extends BaseTest {
                 "Total should equal item total + tax");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify cancel on checkout step one returns to the cart page")
     @Test(groups = {"regression"})
     public void cancelOnStepOneReturnsToCart() {
         CartPage cart = addItemAndGoToCart();
@@ -109,6 +130,8 @@ public class CheckoutTest extends BaseTest {
                 "Should return to cart page");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify cancel on checkout step two returns to the products page")
     @Test(groups = {"regression"})
     public void cancelOnStepTwoReturnsToProducts() {
         CartPage cart = addItemAndGoToCart();

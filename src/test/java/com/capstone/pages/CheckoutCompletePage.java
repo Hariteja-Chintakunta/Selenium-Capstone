@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods to verify the confirmation message and navigate back to products.
 package com.capstone.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -23,6 +24,7 @@ public class CheckoutCompletePage extends BasePage {
         return getText(completeText);
     }
 
+    @Step("Return to products from order confirmation")
     public ProductsPage clickBackHome() {
         click(backHomeButton);
         return new ProductsPage(driver);

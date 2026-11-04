@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods for valid login and login-expecting-error scenarios.
 package com.capstone.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -16,6 +17,7 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
+    @Step("Login with user {user}")
     public ProductsPage login(String user, String pass) {
         type(usernameField, user);
         type(passwordField, pass);
@@ -23,6 +25,7 @@ public class LoginPage extends BasePage {
         return new ProductsPage(driver);
     }
 
+    @Step("Login expecting error with user {user}")
     public LoginPage loginExpectingError(String user, String pass) {
         type(usernameField, user);
         type(passwordField, pass);
@@ -30,6 +33,7 @@ public class LoginPage extends BasePage {
         return this;
     }
 
+    @Step("Get login error message")
     public String getErrorMessage() {
         return getText(errorMessage);
     }

@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods to read order summary, prices, tax, total, and complete the order.
 package com.capstone.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -52,11 +53,13 @@ public class CheckoutStepTwoPage extends BasePage {
         return parsePrice(getTotalText());
     }
 
+    @Step("Finish order")
     public CheckoutCompletePage clickFinish() {
         click(finishButton);
         return new CheckoutCompletePage(driver);
     }
 
+    @Step("Cancel order")
     public ProductsPage clickCancel() {
         click(cancelButton);
         return new ProductsPage(driver);

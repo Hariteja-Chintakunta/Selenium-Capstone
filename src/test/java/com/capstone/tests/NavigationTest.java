@@ -8,15 +8,24 @@ import com.capstone.pages.LoginPage;
 import com.capstone.pages.ProductsPage;
 import com.capstone.pages.SidebarMenu;
 import com.capstone.utils.TestData;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Epic("SauceDemo")
+@Feature("Navigation")
 public class NavigationTest extends BaseTest {
 
     private ProductsPage loginAndGetProductsPage() {
         return new LoginPage(driver).login(TestData.VALID_USER, TestData.VALID_PASSWORD);
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify the sidebar menu opens and closes correctly")
     @Test(groups = {"regression"})
     public void sidebarMenuOpensAndCloses() {
         loginAndGetProductsPage();
@@ -29,6 +38,8 @@ public class NavigationTest extends BaseTest {
         Assert.assertFalse(sidebar.isMenuOpen(), "Menu should be closed");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify All Items link navigates back to the products page")
     @Test(groups = {"regression"})
     public void allItemsLinkGoesToProducts() {
         ProductsPage products = loginAndGetProductsPage();
@@ -42,6 +53,8 @@ public class NavigationTest extends BaseTest {
                 "Should navigate to Products page");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify About link navigates to the Sauce Labs website")
     @Test(groups = {"regression"})
     public void aboutLinkNavigatesToSauceLabs() {
         loginAndGetProductsPage();
@@ -53,6 +66,8 @@ public class NavigationTest extends BaseTest {
                 "Should navigate to Sauce Labs website");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify Logout link returns to the login page")
     @Test(groups = {"regression"})
     public void logoutLinkReturnsToLogin() {
         loginAndGetProductsPage();
@@ -66,6 +81,8 @@ public class NavigationTest extends BaseTest {
                 "Should not be on products page");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify Reset App State clears the cart badge")
     @Test(groups = {"regression"})
     public void resetAppStateClearsCart() {
         ProductsPage products = loginAndGetProductsPage();
@@ -81,6 +98,8 @@ public class NavigationTest extends BaseTest {
                 "Cart badge should be gone after reset");
     }
 
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify the sidebar menu is not visible on initial page load")
     @Test(groups = {"regression"})
     public void menuIsNotVisibleByDefault() {
         loginAndGetProductsPage();

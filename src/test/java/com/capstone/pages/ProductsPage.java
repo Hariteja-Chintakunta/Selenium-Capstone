@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods for product browsing, sorting, cart operations, and navigation.
 package com.capstone.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -45,10 +46,12 @@ public class ProductsPage extends BasePage {
                 .collect(Collectors.toList());
     }
 
+    @Step("Sort products by {optionText}")
     public void sortBy(String optionText) {
         selectByVisibleText(sortDropdown, optionText);
     }
 
+    @Step("Open product detail: {name}")
     public ProductDetailPage clickProduct(String name) {
         List<WebElement> names = getElements(productNames);
         for (WebElement el : names) {
@@ -60,11 +63,13 @@ public class ProductsPage extends BasePage {
         throw new RuntimeException("Product not found: " + name);
     }
 
+    @Step("Add to cart: {productName}")
     public void addToCart(String productName) {
         String buttonId = "add-to-cart-" + productName.toLowerCase().replace(" ", "-");
         click(By.id(buttonId));
     }
 
+    @Step("Remove from cart: {productName}")
     public void removeFromCart(String productName) {
         String buttonId = "remove-" + productName.toLowerCase().replace(" ", "-");
         click(By.id(buttonId));
@@ -81,11 +86,13 @@ public class ProductsPage extends BasePage {
         return isDisplayed(cartBadge);
     }
 
+    @Step("Navigate to cart")
     public CartPage goToCart() {
         click(cartLink);
         return new CartPage(driver);
     }
 
+    @Step("Logout via sidebar menu")
     public LoginPage logout() {
         SidebarMenu sidebar = new SidebarMenu(driver);
         sidebar.openMenu();

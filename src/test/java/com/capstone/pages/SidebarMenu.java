@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods for menu open/close, navigation links, and app state reset.
 package com.capstone.pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -19,11 +20,13 @@ public class SidebarMenu extends BasePage {
         super(driver);
     }
 
+    @Step("Open sidebar menu")
     public void openMenu() {
         click(menuButton);
         waits.waitForClickable(closeButton);
     }
 
+    @Step("Close sidebar menu")
     public void closeMenu() {
         click(closeButton);
         waits.waitForInvisible(closeButton);
@@ -34,20 +37,24 @@ public class SidebarMenu extends BasePage {
         return "false".equals(hidden);
     }
 
+    @Step("Click All Items link")
     public ProductsPage clickAllItems() {
         click(allItemsLink);
         return new ProductsPage(driver);
     }
 
+    @Step("Click About link")
     public void clickAbout() {
         click(aboutLink);
     }
 
+    @Step("Click Logout link")
     public LoginPage clickLogout() {
         click(logoutLink);
         return new LoginPage(driver);
     }
 
+    @Step("Click Reset App State")
     public void clickResetAppState() {
         click(resetLink);
     }
