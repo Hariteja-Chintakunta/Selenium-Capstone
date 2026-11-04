@@ -1,8 +1,63 @@
+<!-- ABOUTME: TestNG suite configuration for the saucedemo test automation framework. -->
+<!-- ABOUTME: Organizes tests by module with parallel execution, listeners, and group support. -->
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="SauceDemo Test Suite">
-    <test name="Setup Tests">
+<suite name="SauceDemo Test Suite" parallel="tests" thread-count="3" verbose="1">
+
+    <listeners>
+        <listener class-name="com.capstone.listeners.TestListener"/>
+        <listener class-name="com.capstone.listeners.RetryTransformer"/>
+    </listeners>
+
+    <test name="Smoke Tests">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.capstone.tests"/>
+        </packages>
+    </test>
+
+    <test name="Login Tests">
         <classes>
-            <class name="com.capstone.tests.SetupCheckTest"/>
+            <class name="com.capstone.tests.LoginTest"/>
+        </classes>
+    </test>
+
+    <test name="Product Listing Tests">
+        <classes>
+            <class name="com.capstone.tests.ProductListingTest"/>
+        </classes>
+    </test>
+
+    <test name="Product Detail Tests">
+        <classes>
+            <class name="com.capstone.tests.ProductDetailTest"/>
+        </classes>
+    </test>
+
+    <test name="Shopping Cart Tests">
+        <classes>
+            <class name="com.capstone.tests.ShoppingCartTest"/>
+        </classes>
+    </test>
+
+    <test name="Checkout Tests">
+        <classes>
+            <class name="com.capstone.tests.CheckoutTest"/>
+        </classes>
+    </test>
+
+    <test name="Navigation Tests">
+        <classes>
+            <class name="com.capstone.tests.NavigationTest"/>
+        </classes>
+    </test>
+
+    <test name="End-to-End Tests">
+        <classes>
+            <class name="com.capstone.tests.EndToEndTest"/>
         </classes>
     </test>
 </suite>
