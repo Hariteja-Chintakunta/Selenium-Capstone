@@ -70,6 +70,17 @@ public class LoginTest extends BaseTest {
         Assert.assertTrue(login.getErrorMessage().contains(TestData.ERROR_LOCKED_OUT));
     }
 
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify login redirects to Dashboard page (intentional failure for demo)")
+    @Test(groups = {"smoke", "regression"})
+    public void validLoginRedirectsToDashboard() {
+        ProductsPage products = new LoginPage(driver)
+                .login(TestData.VALID_USER, TestData.VALID_PASSWORD);
+
+        Assert.assertEquals(products.getTitle(), "Dashboard",
+                "Expected page title to be 'Dashboard' but found '" + products.getTitle() + "'");
+    }
+
     @Severity(SeverityLevel.NORMAL)
     @Description("Verify browser back button after logout does not return to products page")
     @Test(groups = {"regression"})
