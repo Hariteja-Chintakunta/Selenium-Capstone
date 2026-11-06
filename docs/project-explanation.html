@@ -1,0 +1,566 @@
+<title>SauceDemo Automation Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: single-column document, max 820px, generous vertical rhythm */
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a2e;
+    --muted: #5a5a7a;
+    --accent: #2563eb;
+    --accent-light: #dbeafe;
+    --surface: #f1f5f9;
+    --border: #e2e8f0;
+    --code-bg: #f8fafc;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f172a; --fg: #e2e8f0; --muted: #94a3b8; --accent: #60a5fa;
+      --accent-light: #1e3a5f; --surface: #1e293b; --border: #334155;
+      --code-bg: #1e293b; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f172a; --fg: #e2e8f0; --muted: #94a3b8; --accent: #60a5fa;
+    --accent-light: #1e3a5f; --surface: #1e293b; --border: #334155;
+    --code-bg: #1e293b; color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--fg); font-family: var(--font-body);
+    line-height: 1.7; max-width: 820px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 2rem 4rem;
+  }
+  h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.25rem; line-height: 1.2; text-wrap: balance; }
+  h2 { font-size: 1.4rem; font-weight: 700; margin: 2.5rem 0 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--accent); text-wrap: balance; }
+  h3 { font-size: 1.1rem; font-weight: 600; margin: 1.8rem 0 0.6rem; color: var(--accent); }
+  p { margin: 0 0 1rem; }
+  .subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 2rem; }
+  code { font-family: var(--font-mono); font-size: 0.88em; background: var(--code-bg); padding: 0.15em 0.4em; border-radius: 4px; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; margin: 1rem 0; }
+  .tree { white-space: pre; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.5; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+  th { text-align: left; padding: 0.6rem 0.8rem; background: var(--surface); border: 1px solid var(--border); font-weight: 600; }
+  td { padding: 0.6rem 0.8rem; border: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--surface); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; margin: 1rem 0; }
+  .card h4 { margin: 0 0 0.4rem; font-size: 1rem; font-weight: 600; }
+  .card p { margin: 0; font-size: 0.92rem; color: var(--muted); }
+  .badge { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 0.2em 0.6em; border-radius: 4px; background: var(--accent-light); color: var(--accent); letter-spacing: 0.02em; text-transform: uppercase; }
+  .flow { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 1rem 0; }
+  .flow-step { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.88rem; font-weight: 500; }
+  .flow-arrow { color: var(--accent); font-weight: 700; }
+  .highlight { background: var(--accent-light); border-left: 3px solid var(--accent); padding: 0.8rem 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; font-size: 0.92rem; }
+  ul, ol { padding-left: 1.4rem; margin: 0.5rem 0 1rem; }
+  li { margin-bottom: 0.4rem; }
+  .toc { background: var(--surface); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; }
+  .toc h3 { margin: 0 0 0.6rem; color: var(--fg); }
+  .toc ol { margin: 0; }
+  .toc li { margin-bottom: 0.2rem; font-size: 0.92rem; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .method-table td:first-child { font-family: var(--font-mono); font-size: 0.82rem; white-space: nowrap; }
+</style>
+
+<h1>SauceDemo Test Automation Project</h1>
+<p class="subtitle">A complete guide to every component, file, and decision in this Selenium + TestNG automation framework</p>
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#what">What Is This Project?</a></li>
+    <li><a href="#why-maven">Why Maven?</a></li>
+    <li><a href="#pom">What's in pom.xml (Libraries)</a></li>
+    <li><a href="#structure">Project Folder Structure</a></li>
+    <li><a href="#config">Config Files &amp; Resources</a></li>
+    <li><a href="#base">Base Test Class</a></li>
+    <li><a href="#pages">Page Objects (Where Locators Live)</a></li>
+    <li><a href="#utils">Utilities</a></li>
+    <li><a href="#listeners">Listeners (Reports &amp; Retry)</a></li>
+    <li><a href="#tests">Test Classes</a></li>
+    <li><a href="#testng">testng.xml (Test Runner Config)</a></li>
+    <li><a href="#reports">Reports &amp; Screenshots</a></li>
+    <li><a href="#flow">How It All Connects</a></li>
+  </ol>
+</div>
+
+<!-- ======================================== -->
+<h2 id="what">1. What Is This Project?</h2>
+
+<p>This is an <strong>automated testing project</strong> for the website <a href="https://www.saucedemo.com" target="_blank">saucedemo.com</a> (a demo e-commerce site). Instead of a human manually clicking through the website to check if everything works, we wrote Java code that opens a browser, clicks buttons, fills forms, and checks results automatically.</p>
+
+<div class="highlight">
+  <strong>In simple terms:</strong> We wrote a robot that tests a shopping website by logging in, browsing products, adding items to cart, checking out, and verifying everything works correctly. If something breaks, the robot tells us exactly what went wrong with a screenshot.
+</div>
+
+<p>The project uses these core technologies:</p>
+<table>
+  <tr><th>Technology</th><th>What It Does</th></tr>
+  <tr><td><strong>Java 11</strong></td><td>The programming language we write our test code in</td></tr>
+  <tr><td><strong>Selenium WebDriver</strong></td><td>Controls the browser (opens pages, clicks buttons, reads text)</td></tr>
+  <tr><td><strong>TestNG</strong></td><td>The test framework that runs our tests and reports pass/fail</td></tr>
+  <tr><td><strong>Maven</strong></td><td>Manages all libraries and builds the project</td></tr>
+  <tr><td><strong>Page Object Model</strong></td><td>A design pattern that keeps our code organized and reusable</td></tr>
+</table>
+
+<!-- ======================================== -->
+<h2 id="why-maven">2. Why Maven?</h2>
+
+<p>Maven is a <strong>build tool</strong>. Think of it as a project manager for your code. Here's what it does:</p>
+
+<ul>
+  <li><strong>Downloads libraries automatically</strong> &mdash; Instead of manually downloading Selenium JARs from the internet, we just list them in <code>pom.xml</code> and Maven fetches them</li>
+  <li><strong>Compiles our code</strong> &mdash; Converts our Java files into runnable code</li>
+  <li><strong>Runs tests</strong> &mdash; One command (<code>mvn clean test</code>) compiles everything and runs all tests</li>
+  <li><strong>Generates reports</strong> &mdash; Works with Allure to create visual test reports</li>
+  <li><strong>Keeps versions consistent</strong> &mdash; Every team member gets the exact same library versions</li>
+</ul>
+
+<div class="highlight">
+  <strong>Without Maven:</strong> You'd manually download 20+ JAR files, set up classpaths, and hope everyone on the team has the same versions. Maven does all of this with one file (<code>pom.xml</code>).
+</div>
+
+<!-- ======================================== -->
+<h2 id="pom">3. What's in pom.xml (Libraries)</h2>
+
+<p>The <code>pom.xml</code> file is Maven's configuration. It lists every library (dependency) our project needs:</p>
+
+<table>
+  <tr><th>Library</th><th>Version</th><th>What It Does</th></tr>
+  <tr>
+    <td><strong>selenium-java</strong></td><td>4.25.0</td>
+    <td>The core library that controls the browser. It can open Chrome/Firefox/Edge, navigate to URLs, find elements on the page, click them, type text, and read content.</td>
+  </tr>
+  <tr>
+    <td><strong>testng</strong></td><td>7.10.2</td>
+    <td>The test framework. It provides annotations like <code>@Test</code>, <code>@BeforeMethod</code>, <code>@AfterMethod</code>. It decides which tests to run, in what order, and reports which passed or failed.</td>
+  </tr>
+  <tr>
+    <td><strong>extentreports</strong></td><td>5.1.2</td>
+    <td>Creates a beautiful HTML report after tests run. Shows pass/fail status with screenshots of failures. The report is saved as <code>reports/ExtentReport.html</code>.</td>
+  </tr>
+  <tr>
+    <td><strong>allure-testng</strong></td><td>2.25.0</td>
+    <td>Another reporting tool that creates interactive, detailed reports. Supports annotations like <code>@Step</code>, <code>@Epic</code>, <code>@Feature</code>, <code>@Severity</code> to categorize tests.</td>
+  </tr>
+  <tr>
+    <td><strong>aspectjweaver</strong></td><td>1.9.21</td>
+    <td>Required by Allure to intercept <code>@Step</code> annotations and log each step automatically. Without this, Allure's step tracking wouldn't work.</td>
+  </tr>
+</table>
+
+<h3>Build Plugins</h3>
+<table>
+  <tr><th>Plugin</th><th>What It Does</th></tr>
+  <tr><td><strong>maven-surefire-plugin</strong></td><td>Runs the tests using <code>testng.xml</code> config. Also injects the AspectJ agent for Allure.</td></tr>
+  <tr><td><strong>maven-compiler-plugin</strong></td><td>Compiles Java code with Java 11 compatibility.</td></tr>
+  <tr><td><strong>allure-maven</strong></td><td>Generates the Allure report from raw test results.</td></tr>
+</table>
+
+<!-- ======================================== -->
+<h2 id="structure">4. Project Folder Structure</h2>
+
+<div class="card">
+<div class="tree">saucedemo-automation/
++-- pom.xml                         &lt;-- Maven config (libraries, plugins)
++-- testng.xml                      &lt;-- TestNG config (which tests to run)
++-- README.md                       &lt;-- Project documentation
++-- .gitignore                      &lt;-- Files Git should ignore
++-- screenshots/                    &lt;-- Failure screenshots saved here
++-- reports/                        &lt;-- Extent HTML report saved here
++-- allure-results/                 &lt;-- Raw Allure data saved here
++-- target/                         &lt;-- Maven build output (auto-generated)
++-- src/test/
+    +-- resources/
+    |   +-- config.properties       &lt;-- Test settings (browser, URL, etc.)
+    |   +-- allure.properties       &lt;-- Allure output directory config
+    +-- java/com/capstone/
+        +-- base/
+        |   +-- BaseTest.java       &lt;-- Browser setup &amp; teardown
+        +-- pages/
+        |   +-- BasePage.java       &lt;-- Common page actions (click, type)
+        |   +-- LoginPage.java      &lt;-- Login page locators &amp; actions
+        |   +-- ProductsPage.java   &lt;-- Products listing page
+        |   +-- ProductDetailPage.java
+        |   +-- CartPage.java       &lt;-- Shopping cart page
+        |   +-- CheckoutStepOnePage.java  &lt;-- Shipping info form
+        |   +-- CheckoutStepTwoPage.java  &lt;-- Order review page
+        |   +-- CheckoutCompletePage.java &lt;-- Order confirmation
+        |   +-- SidebarMenu.java    &lt;-- Hamburger menu component
+        +-- utils/
+        |   +-- ConfigReader.java   &lt;-- Reads config.properties
+        |   +-- WaitUtils.java      &lt;-- Explicit wait methods
+        |   +-- ScreenshotUtil.java &lt;-- Screenshot capture
+        |   +-- TestData.java       &lt;-- Test data constants
+        +-- tests/
+        |   +-- SetupCheckTest.java
+        |   +-- LoginTest.java
+        |   +-- ProductListingTest.java
+        |   +-- ProductDetailTest.java
+        |   +-- ShoppingCartTest.java
+        |   +-- CheckoutTest.java
+        |   +-- NavigationTest.java
+        |   +-- EndToEndTest.java
+        +-- listeners/
+            +-- TestListener.java       &lt;-- Report generation listener
+            +-- RetryAnalyzer.java      &lt;-- Auto-retry failed tests
+            +-- RetryTransformer.java   &lt;-- Applies retry globally</div>
+</div>
+
+<!-- ======================================== -->
+<h2 id="config">5. Config Files &amp; Resources</h2>
+
+<h3>config.properties</h3>
+<p>This file stores all settings that might change between runs. Instead of hardcoding values in Java code, we read them from here. This means we can change the browser or URL without editing any Java file.</p>
+
+<table>
+  <tr><th>Property</th><th>Value</th><th>What It Controls</th></tr>
+  <tr><td><code>browser</code></td><td>chrome</td><td>Which browser to open (chrome, firefox, or edge)</td></tr>
+  <tr><td><code>headless</code></td><td>false</td><td>If true, browser runs invisibly (no window shown). Useful for CI/CD.</td></tr>
+  <tr><td><code>baseUrl</code></td><td>https://www.saucedemo.com</td><td>The website URL we're testing</td></tr>
+  <tr><td><code>explicitWait</code></td><td>10</td><td>Max seconds to wait for an element to appear before failing</td></tr>
+  <tr><td><code>username</code></td><td>standard_user</td><td>Valid login username</td></tr>
+  <tr><td><code>password</code></td><td>secret_sauce</td><td>Valid login password</td></tr>
+  <tr><td><code>lockedUser</code></td><td>locked_out_user</td><td>A user that's locked out (for negative testing)</td></tr>
+  <tr><td><code>retryCount</code></td><td>1</td><td>How many times to retry a failed test before giving up</td></tr>
+</table>
+
+<h3>allure.properties</h3>
+<p>Just one line: tells Allure where to save its raw result files (<code>allure-results/</code> folder).</p>
+
+<!-- ======================================== -->
+<h2 id="base">6. Base Test Class</h2>
+
+<div class="card">
+  <h4>BaseTest.java</h4>
+  <p>Every test class extends this. It handles the boring-but-essential browser setup and cleanup.</p>
+</div>
+
+<table class="method-table">
+  <tr><th>Method</th><th>When It Runs</th><th>What It Does</th></tr>
+  <tr>
+    <td><code>setUp()</code></td>
+    <td>Before every single test method</td>
+    <td>
+      1. Reads which browser to use from config<br>
+      2. Creates a new browser instance (Chrome, Firefox, or Edge)<br>
+      3. Applies headless mode if configured<br>
+      4. Maximizes the browser window<br>
+      5. Opens the saucedemo.com URL
+    </td>
+  </tr>
+  <tr>
+    <td><code>tearDown()</code></td>
+    <td>After every single test method</td>
+    <td>Closes the browser completely. This ensures each test starts fresh with a clean browser.</td>
+  </tr>
+  <tr>
+    <td><code>getDriver()</code></td>
+    <td>Called by TestListener</td>
+    <td>Returns the browser driver so the listener can take screenshots on failure.</td>
+  </tr>
+</table>
+
+<div class="highlight">
+  <strong>Why a fresh browser per test?</strong> If tests share a browser, a failure in one test (like a broken login) could cause all following tests to fail too. Fresh browser = independent tests.
+</div>
+
+<!-- ======================================== -->
+<h2 id="pages">7. Page Objects (Where Locators Live)</h2>
+
+<p>We use the <strong>Page Object Model (POM)</strong> design pattern. Each page of the website gets its own Java class. That class stores:</p>
+<ul>
+  <li><strong>Locators</strong> &mdash; How to find elements on that page (IDs, CSS selectors, class names)</li>
+  <li><strong>Methods</strong> &mdash; Actions you can perform on that page (click a button, read text, fill a form)</li>
+</ul>
+
+<div class="highlight">
+  <strong>Why POM?</strong> If a developer changes a button's ID on the website, we only fix it in ONE place (the page class), not in every test that clicks that button. Without POM, you'd be hunting through 45 test methods to find and fix every reference.
+</div>
+
+<h3>BasePage.java (Parent of all pages)</h3>
+<p>Contains reusable actions that every page needs. All other page classes extend this.</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>click(locator)</code></td><td>Waits for the element to be clickable, then clicks it</td></tr>
+  <tr><td><code>type(locator, text)</code></td><td>Waits for the element, clears it, then types the text</td></tr>
+  <tr><td><code>getText(locator)</code></td><td>Waits for the element to be visible, then returns its text</td></tr>
+  <tr><td><code>isDisplayed(locator)</code></td><td>Returns true if the element exists and is visible, false otherwise</td></tr>
+  <tr><td><code>getElements(locator)</code></td><td>Returns a list of all matching elements (for product lists, etc.)</td></tr>
+  <tr><td><code>selectByVisibleText(locator, text)</code></td><td>Selects an option from a dropdown by its visible text</td></tr>
+</table>
+
+<h3>LoginPage.java</h3>
+<p><strong>Locators:</strong> username field, password field, login button, error message</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>login(user, pass)</code></td><td>Types username + password, clicks login, returns ProductsPage</td></tr>
+  <tr><td><code>loginExpectingError(user, pass)</code></td><td>Same as login but stays on LoginPage (for testing errors)</td></tr>
+  <tr><td><code>getErrorMessage()</code></td><td>Returns the error message text shown after a failed login</td></tr>
+</table>
+
+<h3>ProductsPage.java</h3>
+<p><strong>Locators:</strong> page title, product names, product prices, sort dropdown, cart link, cart badge</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>getTitle()</code></td><td>Returns the page title text ("Products")</td></tr>
+  <tr><td><code>getProductCount()</code></td><td>Counts how many products are listed</td></tr>
+  <tr><td><code>getProductNames()</code></td><td>Returns a list of all product names</td></tr>
+  <tr><td><code>getProductPrices()</code></td><td>Returns a list of all product prices as numbers</td></tr>
+  <tr><td><code>sortBy(option)</code></td><td>Selects a sort option from the dropdown (e.g., "Price (low to high)")</td></tr>
+  <tr><td><code>clickProduct(name)</code></td><td>Clicks on a specific product to open its detail page</td></tr>
+  <tr><td><code>addToCart(name)</code></td><td>Clicks the "Add to cart" button for a specific product</td></tr>
+  <tr><td><code>removeFromCart(name)</code></td><td>Clicks the "Remove" button for a specific product</td></tr>
+  <tr><td><code>getCartBadgeCount()</code></td><td>Returns the number shown on the cart icon (0 if no badge)</td></tr>
+  <tr><td><code>isCartBadgePresent()</code></td><td>Checks if the cart badge (number) is visible</td></tr>
+  <tr><td><code>goToCart()</code></td><td>Clicks the cart icon to navigate to the cart page</td></tr>
+  <tr><td><code>logout()</code></td><td>Opens sidebar menu and clicks logout</td></tr>
+</table>
+
+<h3>ProductDetailPage.java</h3>
+<p><strong>Locators:</strong> product name, description, price, add-to-cart button, remove button, back button, cart badge</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>getProductName()</code></td><td>Returns the product's name on the detail page</td></tr>
+  <tr><td><code>getProductPrice()</code></td><td>Returns the product's price</td></tr>
+  <tr><td><code>getProductDescription()</code></td><td>Returns the product's description text</td></tr>
+  <tr><td><code>addToCart()</code></td><td>Adds this product to the cart</td></tr>
+  <tr><td><code>removeFromCart()</code></td><td>Removes this product from the cart</td></tr>
+  <tr><td><code>isCartBadgePresent()</code></td><td>Checks if cart badge is visible</td></tr>
+  <tr><td><code>goBackToProducts()</code></td><td>Clicks the back button to return to the products list</td></tr>
+</table>
+
+<h3>CartPage.java</h3>
+<p><strong>Locators:</strong> cart items, item names, item prices, continue shopping button, checkout button</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>getCartItemCount()</code></td><td>Counts items currently in the cart</td></tr>
+  <tr><td><code>getItemNames()</code></td><td>Returns a list of product names in the cart</td></tr>
+  <tr><td><code>getItemPrices()</code></td><td>Returns a list of prices in the cart</td></tr>
+  <tr><td><code>removeItemByName(name)</code></td><td>Removes a specific product from the cart</td></tr>
+  <tr><td><code>clickContinueShopping()</code></td><td>Goes back to the products page</td></tr>
+  <tr><td><code>clickCheckout()</code></td><td>Proceeds to checkout step one</td></tr>
+  <tr><td><code>isCartEmpty()</code></td><td>Returns true if cart has zero items</td></tr>
+</table>
+
+<h3>CheckoutStepOnePage.java</h3>
+<p><strong>Locators:</strong> first name, last name, zip code, continue button, cancel button, error message</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>fillForm(first, last, zip)</code></td><td>Types first name, last name, and zip code into the form</td></tr>
+  <tr><td><code>clickContinue()</code></td><td>Submits the form and goes to step two</td></tr>
+  <tr><td><code>clickContinueExpectingError()</code></td><td>Submits the form expecting a validation error</td></tr>
+  <tr><td><code>clickCancel()</code></td><td>Cancels and returns to the cart</td></tr>
+  <tr><td><code>getErrorMessage()</code></td><td>Returns the validation error text</td></tr>
+</table>
+
+<h3>CheckoutStepTwoPage.java</h3>
+<p><strong>Locators:</strong> item names, subtotal, tax, total, finish button, cancel button</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>getItemNames()</code></td><td>Returns the list of items in the order summary</td></tr>
+  <tr><td><code>getItemTotalAsDouble()</code></td><td>Returns the item subtotal as a number</td></tr>
+  <tr><td><code>getTaxAsDouble()</code></td><td>Returns the tax amount as a number</td></tr>
+  <tr><td><code>getTotalAsDouble()</code></td><td>Returns the grand total as a number</td></tr>
+  <tr><td><code>clickFinish()</code></td><td>Completes the order</td></tr>
+  <tr><td><code>clickCancel()</code></td><td>Cancels and returns to products page</td></tr>
+</table>
+
+<h3>CheckoutCompletePage.java</h3>
+<p><strong>Locators:</strong> confirmation header, back home button</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>getConfirmationHeader()</code></td><td>Returns the "Thank you for your order!" message</td></tr>
+  <tr><td><code>clickBackHome()</code></td><td>Returns to the products page after ordering</td></tr>
+</table>
+
+<h3>SidebarMenu.java</h3>
+<p><strong>Locators:</strong> menu button (hamburger), close button, menu wrapper, all items link, about link, logout link, reset link</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>openMenu()</code></td><td>Clicks the hamburger icon and waits for the menu to open</td></tr>
+  <tr><td><code>closeMenu()</code></td><td>Clicks the X button and waits for the menu to close</td></tr>
+  <tr><td><code>isMenuOpen()</code></td><td>Checks if the sidebar menu is currently visible</td></tr>
+  <tr><td><code>clickAllItems()</code></td><td>Clicks "All Items" to go to products page</td></tr>
+  <tr><td><code>clickAbout()</code></td><td>Clicks "About" to go to saucelabs.com</td></tr>
+  <tr><td><code>clickLogout()</code></td><td>Clicks "Logout" to return to login page</td></tr>
+  <tr><td><code>clickResetAppState()</code></td><td>Clicks "Reset App State" to clear the cart</td></tr>
+</table>
+
+<!-- ======================================== -->
+<h2 id="utils">8. Utilities</h2>
+
+<h3>ConfigReader.java</h3>
+<p>Reads values from <code>config.properties</code>. Uses a <code>static</code> block, so the file is loaded once when the class first loads.</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>get(key)</code></td><td>Returns a string value (e.g., <code>ConfigReader.get("browser")</code> returns "chrome")</td></tr>
+  <tr><td><code>getInt(key)</code></td><td>Returns an integer value (e.g., <code>ConfigReader.getInt("explicitWait")</code> returns 10)</td></tr>
+</table>
+
+<h3>WaitUtils.java</h3>
+<p>Wraps Selenium's <code>WebDriverWait</code> with easy-to-use methods. The timeout comes from <code>config.properties</code> (10 seconds).</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>waitForVisible(locator)</code></td><td>Waits until the element is visible on the page, then returns it</td></tr>
+  <tr><td><code>waitForClickable(locator)</code></td><td>Waits until the element can be clicked, then returns it</td></tr>
+  <tr><td><code>waitForInvisible(locator)</code></td><td>Waits until the element disappears from the page</td></tr>
+</table>
+
+<div class="highlight">
+  <strong>Why explicit waits instead of Thread.sleep?</strong> <code>Thread.sleep(3000)</code> always waits 3 seconds even if the element appears in 0.5 seconds. Explicit waits check every 500ms and move on as soon as the element is ready. This makes tests faster and more reliable.
+</div>
+
+<h3>ScreenshotUtil.java</h3>
+<p>Captures browser screenshots. Called automatically on test failure by the TestListener.</p>
+<table class="method-table">
+  <tr><th>Method</th><th>What It Does</th></tr>
+  <tr><td><code>capture(driver, testName)</code></td><td>Saves a PNG screenshot to <code>screenshots/</code> folder with timestamp. Returns the file path for the Extent report.</td></tr>
+  <tr><td><code>captureAsBytes(driver)</code></td><td>Returns screenshot as a byte array for Allure attachment.</td></tr>
+</table>
+
+<h3>TestData.java</h3>
+<p>A class that holds all test data as constants. No method in the project hardcodes test values &mdash; everything comes from here or from <code>config.properties</code>.</p>
+<table>
+  <tr><th>Category</th><th>Constants</th></tr>
+  <tr><td>Credentials</td><td><code>VALID_USER</code>, <code>VALID_PASSWORD</code>, <code>LOCKED_USER</code>, <code>INVALID_PASSWORD</code></td></tr>
+  <tr><td>Checkout form</td><td><code>FIRST_NAME</code> ("Test"), <code>LAST_NAME</code> ("User"), <code>ZIP_CODE</code> ("12345")</td></tr>
+  <tr><td>Expected values</td><td><code>EXPECTED_PRODUCT_COUNT</code> (6), <code>PRODUCTS_TITLE</code> ("Products"), <code>ORDER_CONFIRMATION</code></td></tr>
+  <tr><td>Error messages</td><td><code>ERROR_USERNAME_REQUIRED</code>, <code>ERROR_PASSWORD_REQUIRED</code>, <code>ERROR_LOCKED_OUT</code>, <code>ERROR_CREDENTIALS_MISMATCH</code>, <code>ERROR_FIRSTNAME_REQUIRED</code>, <code>ERROR_LASTNAME_REQUIRED</code>, <code>ERROR_ZIPCODE_REQUIRED</code></td></tr>
+</table>
+
+<!-- ======================================== -->
+<h2 id="listeners">9. Listeners (Reports &amp; Retry)</h2>
+
+<h3>TestListener.java</h3>
+<p>Implements TestNG's <code>ITestListener</code> interface. It automatically reacts to test events:</p>
+<table>
+  <tr><th>Event</th><th>What the Listener Does</th></tr>
+  <tr><td><strong>Suite starts</strong></td><td>Creates the Extent report file at <code>reports/ExtentReport.html</code> with title, theme, and system info</td></tr>
+  <tr><td><strong>Test starts</strong></td><td>Creates a new entry in the Extent report for this test</td></tr>
+  <tr><td><strong>Test passes</strong></td><td>Logs PASS status in the report</td></tr>
+  <tr><td><strong>Test fails</strong></td><td>Logs FAIL status + error message, captures screenshot (saved to file for Extent, byte array for Allure), records the URL where the failure happened</td></tr>
+  <tr><td><strong>Test skipped</strong></td><td>Logs SKIP status with reason</td></tr>
+  <tr><td><strong>Suite finishes</strong></td><td>Saves and closes the Extent report file</td></tr>
+</table>
+
+<h3>RetryAnalyzer.java</h3>
+<p>If a test fails, this retries it up to <code>retryCount</code> times (default 1). This helps with <strong>flaky tests</strong> &mdash; tests that sometimes fail due to timing issues, not actual bugs.</p>
+
+<h3>RetryTransformer.java</h3>
+<p>Automatically applies the <code>RetryAnalyzer</code> to every <code>@Test</code> method. Without this, you'd have to manually add <code>retryAnalyzer = RetryAnalyzer.class</code> to each <code>@Test</code> annotation.</p>
+
+<!-- ======================================== -->
+<h2 id="tests">10. Test Classes</h2>
+
+<p>We have <strong>8 test classes</strong> with a total of <strong>46 test methods</strong>. Each class focuses on one area of the website.</p>
+
+<table>
+  <tr><th>Test Class</th><th>Tests</th><th>What It Covers</th></tr>
+  <tr><td><strong>SetupCheckTest</strong></td><td>1</td><td>Smoke test: verifies the browser can load saucedemo.com (page title = "Swag Labs")</td></tr>
+  <tr><td><strong>LoginTest</strong></td><td>7</td><td>Valid login, invalid password, empty fields, locked user, browser back after logout, and one intentional failure for demo</td></tr>
+  <tr><td><strong>ProductListingTest</strong></td><td>7</td><td>Product count, default sort (A-Z), sort Z-A, sort by price (low/high), name validation, price validation</td></tr>
+  <tr><td><strong>ProductDetailTest</strong></td><td>6</td><td>Product name/price/description match listing, add/remove from detail page, back navigation</td></tr>
+  <tr><td><strong>ShoppingCartTest</strong></td><td>7</td><td>Add single/multiple items, remove items, cart details match products, continue shopping, empty cart, badge updates</td></tr>
+  <tr><td><strong>CheckoutTest</strong></td><td>8</td><td>Complete checkout, empty form errors, missing field errors, order summary, price calculation, cancel navigation</td></tr>
+  <tr><td><strong>NavigationTest</strong></td><td>6</td><td>Sidebar menu open/close, All Items link, About link, Logout link, Reset App State, menu hidden by default</td></tr>
+  <tr><td><strong>EndToEndTest</strong></td><td>4</td><td>Full purchase flows: single item, multiple items, add-remove-then-checkout, checkout-and-return</td></tr>
+</table>
+
+<h3>Test Groups</h3>
+<p>Tests are tagged with groups so you can run specific subsets:</p>
+<ul>
+  <li><span class="badge">smoke</span> &mdash; Quick sanity checks (run these first to verify basics work)</li>
+  <li><span class="badge">regression</span> &mdash; Full test suite (run these to verify nothing broke)</li>
+</ul>
+<p>Run only smoke tests: <code>mvn test -Dgroups=smoke</code></p>
+
+<h3>Allure Annotations Used on Tests</h3>
+<table>
+  <tr><th>Annotation</th><th>What It Does</th></tr>
+  <tr><td><code>@Epic("SauceDemo")</code></td><td>Groups all tests under the "SauceDemo" project in Allure report</td></tr>
+  <tr><td><code>@Feature("Login")</code></td><td>Groups tests by feature area (Login, Checkout, etc.)</td></tr>
+  <tr><td><code>@Severity(CRITICAL)</code></td><td>Marks how important the test is (BLOCKER, CRITICAL, NORMAL)</td></tr>
+  <tr><td><code>@Description("...")</code></td><td>Adds a human-readable description in the Allure report</td></tr>
+  <tr><td><code>@Step("...")</code></td><td>Used in page methods to log each action as a step in the report</td></tr>
+</table>
+
+<!-- ======================================== -->
+<h2 id="testng">11. testng.xml</h2>
+
+<p>This XML file tells TestNG which tests to run and how:</p>
+<ul>
+  <li><strong>Suite name:</strong> "SauceDemo Test Suite"</li>
+  <li><strong>Parallel execution:</strong> Runs test groups in parallel using 3 threads (3 browsers open at once)</li>
+  <li><strong>Listeners:</strong> Registers TestListener (for reports) and RetryTransformer (for auto-retry)</li>
+  <li><strong>8 test blocks:</strong> One for each test class, run in order: Setup, Login, Product Listing, Product Detail, Shopping Cart, Checkout, Navigation, End-to-End</li>
+</ul>
+
+<!-- ======================================== -->
+<h2 id="reports">12. Reports &amp; Screenshots</h2>
+
+<h3>Where Things Are Stored</h3>
+<table>
+  <tr><th>What</th><th>Where</th><th>When Generated</th></tr>
+  <tr><td>Extent HTML Report</td><td><code>reports/ExtentReport.html</code></td><td>After tests run (auto)</td></tr>
+  <tr><td>Allure raw results</td><td><code>allure-results/</code></td><td>After tests run (auto)</td></tr>
+  <tr><td>Allure HTML Report</td><td>Served live via <code>mvn allure:serve</code></td><td>On demand</td></tr>
+  <tr><td>Failure screenshots</td><td><code>screenshots/</code></td><td>When a test fails (auto)</td></tr>
+</table>
+
+<h3>Extent Reports</h3>
+<p>A standalone HTML file you open in a browser. Shows pass/fail counts, each test with its status, and embedded screenshots for failures. Generated automatically by <code>TestListener.java</code>.</p>
+
+<h3>Allure Reports</h3>
+<p>An interactive report that opens in a browser via <code>mvn allure:serve</code>. Shows tests organized by Epic/Feature/Severity, step-by-step execution logs (via <code>@Step</code>), failure screenshots, timeline view, and trends over multiple runs.</p>
+
+<!-- ======================================== -->
+<h2 id="flow">13. How It All Connects</h2>
+
+<p>Here's the flow when you run <code>mvn clean test</code>:</p>
+
+<div class="flow">
+  <div class="flow-step">mvn clean test</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Maven reads pom.xml</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Downloads dependencies</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Compiles Java code</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Reads testng.xml</div>
+</div>
+<div class="flow">
+  <div class="flow-step">TestNG starts suite</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">TestListener initializes Extent report</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">For each test method:</div>
+</div>
+<div class="flow" style="margin-left: 1rem;">
+  <div class="flow-step">BaseTest.setUp() opens browser</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Test method runs using Page Objects</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Assert checks results</div>
+</div>
+<div class="flow" style="margin-left: 1rem;">
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Listener logs pass/fail + screenshot</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">BaseTest.tearDown() closes browser</div>
+</div>
+<div class="flow">
+  <div class="flow-step">Suite finishes</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Extent report saved</div>
+  <span class="flow-arrow">&rarr;</span>
+  <div class="flow-step">Allure results saved</div>
+</div>
+
+<p style="margin-top: 2rem; text-align: center; color: var(--muted); font-size: 0.85rem;">
+  SauceDemo Automation Project &mdash; Capstone Project Documentation
+</p>

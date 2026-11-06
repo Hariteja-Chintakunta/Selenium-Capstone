@@ -1,0 +1,324 @@
+<title>SauceDemo Automation</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  :root {
+    --bg: #0f172a; --fg: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+    --accent2: #818cf8; --surface: #1e293b; --border: #334155;
+    --font: 'Inter', system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #ffffff; --fg: #0f172a; --muted: #64748b; --accent: #0284c7;
+      --accent2: #6366f1; --surface: #f1f5f9; --border: #e2e8f0;
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #ffffff; --fg: #0f172a; --muted: #64748b; --accent: #0284c7;
+    --accent2: #6366f1; --surface: #f1f5f9; --border: #e2e8f0;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--fg); font-family: var(--font);
+    margin: 0; padding: 0; overflow: hidden; height: 100vh;
+  }
+  .deck { width: 100%; height: 100%; position: relative; }
+  .slide {
+    position: absolute; inset: 0; display: none; flex-direction: column;
+    justify-content: center;
+    padding-left: max(48px, env(safe-area-inset-left, 0px));
+    padding-right: max(48px, env(safe-area-inset-right, 0px));
+    padding-block: 40px;
+  }
+  .slide.active { display: flex; }
+  .slide h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin: 0 0 0.5rem; line-height: 1.15; text-wrap: balance; }
+  .slide h2 { font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 700; margin: 0 0 1.2rem; line-height: 1.2; text-wrap: balance; }
+  .slide h3 { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin: 0 0 0.5rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .slide p { font-size: clamp(0.95rem, 1.8vw, 1.15rem); line-height: 1.65; margin: 0 0 0.8rem; max-width: 680px; color: var(--muted); }
+  .slide ul { padding-left: 1.2rem; margin: 0.4rem 0 1rem; max-width: 700px; }
+  .slide li { font-size: clamp(0.92rem, 1.6vw, 1.1rem); line-height: 1.6; margin-bottom: 0.5rem; }
+  .accent { color: var(--accent); }
+  .accent2 { color: var(--accent2); }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.2em 0.7em; border-radius: 4px; background: var(--accent); color: var(--bg); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 0.8rem 0; max-width: 780px; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem; margin: 0.8rem 0; max-width: 780px; }
+  .gcard { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
+  .gcard h4 { margin: 0 0 0.3rem; font-size: 1rem; font-weight: 600; }
+  .gcard p { font-size: 0.88rem; margin: 0; }
+  .title-slide { align-items: center; text-align: center; }
+  .title-slide p { max-width: 500px; }
+  code { font-size: 0.88em; background: var(--surface); padding: 0.15em 0.4em; border-radius: 4px; }
+
+  /* Nav */
+  .nav { position: fixed; bottom: 20px; right: max(20px, env(safe-area-inset-right, 0px)); display: flex; gap: 8px; z-index: 10; }
+  .nav button {
+    width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--surface); color: var(--fg); font-size: 1.1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav button:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .counter { position: fixed; bottom: 28px; left: max(20px, env(safe-area-inset-left, 0px)); font-size: 0.8rem; color: var(--muted); z-index: 10; font-variant-numeric: tabular-nums; }
+
+  .flow-row { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin: 0.6rem 0; }
+  .fbox { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.4rem 0.9rem; font-size: 0.88rem; font-weight: 500; }
+  .farr { color: var(--accent); font-weight: 700; font-size: 1.1rem; }
+
+  table { border-collapse: collapse; margin: 0.6rem 0; font-size: 0.88rem; width: 100%; max-width: 700px; }
+  th { text-align: left; padding: 0.5rem 0.7rem; background: var(--surface); border: 1px solid var(--border); font-weight: 600; }
+  td { padding: 0.5rem 0.7rem; border: 1px solid var(--border); }
+</style>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide title-slide active">
+    <div class="tag">Capstone Project</div>
+    <h1>SauceDemo <span class="accent">Test Automation</span></h1>
+    <p>A Selenium WebDriver + TestNG framework for automated testing of the SauceDemo e-commerce website</p>
+    <p style="font-size: 0.85rem; margin-top: 1.5rem;">Hari Teja Chintakunta</p>
+  </div>
+
+  <!-- SLIDE 2: What & Why -->
+  <div class="slide">
+    <h3>Introduction</h3>
+    <h2>What Is This Project?</h2>
+    <p>An automated test suite that opens a real browser and tests every feature of <strong>saucedemo.com</strong> &mdash; login, product browsing, cart, checkout &mdash; without any manual effort.</p>
+    <div class="grid2">
+      <div class="gcard">
+        <h4 class="accent">The Problem</h4>
+        <p>Manual testing is slow, repetitive, and error-prone. A human can't click through 46 test scenarios every time code changes.</p>
+      </div>
+      <div class="gcard">
+        <h4 class="accent">The Solution</h4>
+        <p>Write code that acts like a user &mdash; clicks buttons, fills forms, checks results &mdash; and runs all 46 tests in minutes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Tech Stack -->
+  <div class="slide">
+    <h3>Technology Stack</h3>
+    <h2>Tools &amp; Libraries</h2>
+    <div class="grid3">
+      <div class="gcard"><h4>Java 11</h4><p>Programming language</p></div>
+      <div class="gcard"><h4>Selenium 4.25</h4><p>Browser automation</p></div>
+      <div class="gcard"><h4>TestNG 7.10</h4><p>Test framework</p></div>
+      <div class="gcard"><h4>Maven</h4><p>Build &amp; dependency management</p></div>
+      <div class="gcard"><h4>Extent Reports</h4><p>HTML test report</p></div>
+      <div class="gcard"><h4>Allure 2.25</h4><p>Interactive test report</p></div>
+    </div>
+    <p style="margin-top: 0.8rem;"><strong>Maven</strong> downloads all libraries automatically from <code>pom.xml</code> &mdash; no manual JAR setup needed.</p>
+  </div>
+
+  <!-- SLIDE 4: Architecture -->
+  <div class="slide">
+    <h3>Architecture</h3>
+    <h2>Page Object Model (POM)</h2>
+    <p>Each page of the website gets its own Java class that stores <strong>locators</strong> (how to find elements) and <strong>methods</strong> (actions on that page).</p>
+    <div class="grid2">
+      <div class="gcard">
+        <h4>Without POM</h4>
+        <p>Button ID changes? Fix it in every test file that uses it. 20 tests = 20 fixes.</p>
+      </div>
+      <div class="gcard">
+        <h4>With POM</h4>
+        <p>Button ID changes? Fix it in ONE page class. All 20 tests automatically use the fix.</p>
+      </div>
+    </div>
+    <p style="margin-top: 0.6rem;">Pages: <code>LoginPage</code>, <code>ProductsPage</code>, <code>CartPage</code>, <code>CheckoutStepOnePage</code>, <code>CheckoutStepTwoPage</code>, <code>CheckoutCompletePage</code>, <code>ProductDetailPage</code>, <code>SidebarMenu</code></p>
+  </div>
+
+  <!-- SLIDE 5: Project Structure -->
+  <div class="slide">
+    <h3>Organization</h3>
+    <h2>Project Structure</h2>
+    <div class="grid2">
+      <div class="gcard">
+        <h4>base/</h4>
+        <p><code>BaseTest.java</code> &mdash; Opens &amp; closes browser before/after each test</p>
+      </div>
+      <div class="gcard">
+        <h4>pages/</h4>
+        <p>8 page classes &mdash; Each stores locators + actions for one page</p>
+      </div>
+      <div class="gcard">
+        <h4>tests/</h4>
+        <p>8 test classes &mdash; 46 test methods covering all features</p>
+      </div>
+      <div class="gcard">
+        <h4>utils/</h4>
+        <p><code>ConfigReader</code>, <code>WaitUtils</code>, <code>ScreenshotUtil</code>, <code>TestData</code></p>
+      </div>
+      <div class="gcard">
+        <h4>listeners/</h4>
+        <p><code>TestListener</code> (reports), <code>RetryAnalyzer</code> (retry on failure)</p>
+      </div>
+      <div class="gcard">
+        <h4>resources/</h4>
+        <p><code>config.properties</code> &mdash; Browser, URL, credentials, timeouts</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Config & Data -->
+  <div class="slide">
+    <h3>Configuration</h3>
+    <h2>Where Data Lives</h2>
+    <table>
+      <tr><th>What</th><th>Where</th><th>Why Separate</th></tr>
+      <tr><td>Browser, URL, timeouts</td><td><code>config.properties</code></td><td>Change settings without editing Java code</td></tr>
+      <tr><td>Usernames, passwords</td><td><code>TestData.java</code> (reads from config)</td><td>Centralized, no hardcoding in tests</td></tr>
+      <tr><td>Error messages, expected values</td><td><code>TestData.java</code> (constants)</td><td>One place to update if messages change</td></tr>
+      <tr><td>Element locators (IDs, CSS)</td><td>Page classes (<code>LoginPage</code>, etc.)</td><td>Page Object Model: one fix, all tests benefit</td></tr>
+    </table>
+    <p style="margin-top: 0.6rem;">Running in Firefox headless is just: <code>mvn test -Dbrowser=firefox -Dheadless=true</code></p>
+  </div>
+
+  <!-- SLIDE 7: Wait Strategy -->
+  <div class="slide">
+    <h3>Synchronization</h3>
+    <h2>Wait Strategy: No Thread.sleep</h2>
+    <div class="grid2">
+      <div class="gcard" style="border-color: #ef4444;">
+        <h4 style="color: #ef4444;">Bad: Thread.sleep(3000)</h4>
+        <p>Always waits 3 seconds, even if the element appears instantly. Slow and unreliable.</p>
+      </div>
+      <div class="gcard" style="border-color: #22c55e;">
+        <h4 style="color: #22c55e;">Good: Explicit Waits</h4>
+        <p>Checks every 500ms. Moves on immediately when ready. Fails after 10s timeout if element never appears.</p>
+      </div>
+    </div>
+    <p>All waits go through <code>WaitUtils.java</code> which wraps <code>WebDriverWait</code>:</p>
+    <ul>
+      <li><code>waitForVisible()</code> &mdash; Wait until element is visible</li>
+      <li><code>waitForClickable()</code> &mdash; Wait until element can be clicked</li>
+      <li><code>waitForInvisible()</code> &mdash; Wait until element disappears</li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 8: Test Coverage -->
+  <div class="slide">
+    <h3>Test Coverage</h3>
+    <h2>46 Tests Across 8 Modules</h2>
+    <table>
+      <tr><th>Module</th><th>Tests</th><th>Key Scenarios</th></tr>
+      <tr><td>Setup</td><td>1</td><td>Browser loads the site</td></tr>
+      <tr><td>Login</td><td>7</td><td>Valid, invalid, empty, locked user</td></tr>
+      <tr><td>Product Listing</td><td>7</td><td>Count, sort A-Z/Z-A, price sort</td></tr>
+      <tr><td>Product Detail</td><td>6</td><td>Name/price match, add/remove cart</td></tr>
+      <tr><td>Shopping Cart</td><td>7</td><td>Add, remove, badge, empty cart</td></tr>
+      <tr><td>Checkout</td><td>8</td><td>Full flow, validation errors, price math</td></tr>
+      <tr><td>Navigation</td><td>6</td><td>Sidebar, logout, reset state</td></tr>
+      <tr><td>End-to-End</td><td>4</td><td>Full purchase journeys</td></tr>
+    </table>
+  </div>
+
+  <!-- SLIDE 9: Reports -->
+  <div class="slide">
+    <h3>Reporting</h3>
+    <h2>Dual Reporting System</h2>
+    <div class="grid2">
+      <div class="gcard">
+        <h4>Extent Reports</h4>
+        <p>Standalone HTML file at <code>reports/ExtentReport.html</code>. Shows pass/fail, failure screenshots, and test details. Generated automatically.</p>
+      </div>
+      <div class="gcard">
+        <h4>Allure Reports</h4>
+        <p>Interactive dashboard via <code>mvn allure:serve</code>. Tests organized by Epic/Feature/Severity. Step-by-step logs. Timeline view.</p>
+      </div>
+    </div>
+    <p style="margin-top: 0.8rem;"><strong>On failure:</strong> Screenshot is auto-captured and attached to both reports. The URL where the failure occurred is also logged.</p>
+    <table style="max-width: 500px; margin-top: 0.5rem;">
+      <tr><th>Output</th><th>Location</th></tr>
+      <tr><td>Extent Report</td><td><code>reports/ExtentReport.html</code></td></tr>
+      <tr><td>Allure Results</td><td><code>allure-results/</code></td></tr>
+      <tr><td>Failure Screenshots</td><td><code>screenshots/</code></td></tr>
+    </table>
+  </div>
+
+  <!-- SLIDE 10: Execution Flow -->
+  <div class="slide">
+    <h3>Execution</h3>
+    <h2>How It All Works Together</h2>
+    <div class="flow-row">
+      <div class="fbox"><strong>mvn clean test</strong></div>
+      <span class="farr">&rarr;</span>
+      <div class="fbox">Maven reads pom.xml</div>
+      <span class="farr">&rarr;</span>
+      <div class="fbox">Downloads libraries</div>
+      <span class="farr">&rarr;</span>
+      <div class="fbox">Compiles code</div>
+    </div>
+    <div class="flow-row">
+      <div class="fbox">Reads testng.xml</div>
+      <span class="farr">&rarr;</span>
+      <div class="fbox">Opens 3 browser threads</div>
+      <span class="farr">&rarr;</span>
+      <div class="fbox">Runs 46 tests</div>
+    </div>
+    <div class="flow-row">
+      <div class="fbox">Each test: setUp &rarr; run &rarr; tearDown</div>
+      <span class="farr">&rarr;</span>
+      <div class="fbox">Listener logs results</div>
+      <span class="farr">&rarr;</span>
+      <div class="fbox">Reports generated</div>
+    </div>
+    <p style="margin-top: 1rem;">Parallel execution with 3 threads means the suite runs ~3x faster than sequential.</p>
+  </div>
+
+  <!-- SLIDE 11: Key Features -->
+  <div class="slide">
+    <h3>Highlights</h3>
+    <h2>Key Features</h2>
+    <div class="grid3">
+      <div class="gcard"><h4>Page Object Model</h4><p>Clean, maintainable code organization</p></div>
+      <div class="gcard"><h4>Explicit Waits</h4><p>Zero Thread.sleep calls</p></div>
+      <div class="gcard"><h4>Auto Screenshots</h4><p>Captured on every failure</p></div>
+      <div class="gcard"><h4>Dual Reports</h4><p>Extent + Allure</p></div>
+      <div class="gcard"><h4>Retry Mechanism</h4><p>Auto-retry flaky tests</p></div>
+      <div class="gcard"><h4>Parallel Execution</h4><p>3 threads via TestNG</p></div>
+      <div class="gcard"><h4>Config-Driven</h4><p>No hardcoded values</p></div>
+      <div class="gcard"><h4>Multi-Browser</h4><p>Chrome, Firefox, Edge</p></div>
+      <div class="gcard"><h4>Headless Mode</h4><p>Run without UI for CI/CD</p></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Thank You -->
+  <div class="slide title-slide">
+    <div class="tag">End</div>
+    <h1>Thank You</h1>
+    <p>SauceDemo Test Automation &mdash; Capstone Project</p>
+    <p style="font-size: 0.85rem; margin-top: 1rem;">Hari Teja Chintakunta</p>
+  </div>
+</div>
+
+<div class="counter"><span id="cur">1</span> / <span id="tot">12</span></div>
+<div class="nav">
+  <button id="prev" aria-label="Previous slide">&#8592;</button>
+  <button id="next" aria-label="Next slide">&#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  document.getElementById('tot').textContent = total;
+
+  function show(i) {
+    slides[current].classList.remove('active');
+    current = (i + total) % total;
+    slides[current].classList.add('active');
+    document.getElementById('cur').textContent = current + 1;
+  }
+
+  document.getElementById('prev').addEventListener('click', function() { show(current - 1); });
+  document.getElementById('next').addEventListener('click', function() { show(current + 1); });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(current + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); show(current - 1); }
+  });
+</script>
