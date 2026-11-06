@@ -47,7 +47,4 @@ public class CheckoutStepOnePage extends BasePage {
         return getText(errorMessage);
     }
 
-    public boolean isErrorDisplayed() {
-        return isDisplayed(errorMessage);
-    }
 }

@@ -27,15 +27,7 @@ public class WaitUtils {
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
-    public boolean waitForUrlContains(String text) {
-        return wait.until(ExpectedConditions.urlContains(text));
-    }
-
     public boolean waitForInvisible(By locator) {
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
-    }
-
-    public boolean waitForTextInElement(By locator, String text) {
-        return wait.until(ExpectedConditions.textToBePresentInElementLocated(locator, text));
     }
 }

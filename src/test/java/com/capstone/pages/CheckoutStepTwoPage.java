@@ -29,28 +29,16 @@ public class CheckoutStepTwoPage extends BasePage {
                 .collect(Collectors.toList());
     }
 
-    public String getItemTotalText() {
-        return getText(itemTotal);
-    }
-
-    public String getTaxText() {
-        return getText(taxLabel);
-    }
-
-    public String getTotalText() {
-        return getText(totalLabel);
-    }
-
     public double getItemTotalAsDouble() {
-        return parsePrice(getItemTotalText());
+        return parsePrice(getText(itemTotal));
     }
 
     public double getTaxAsDouble() {
-        return parsePrice(getTaxText());
+        return parsePrice(getText(taxLabel));
     }
 
     public double getTotalAsDouble() {
-        return parsePrice(getTotalText());
+        return parsePrice(getText(totalLabel));
     }
 
     @Step("Finish order")
