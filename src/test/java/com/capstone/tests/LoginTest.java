@@ -71,14 +71,15 @@ public class LoginTest extends BaseTest {
     }
 
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Verify login redirects to Dashboard page (intentional failure for demo)")
+    @Description("Verify login redirects to the Products page")
     @Test(groups = {"smoke", "regression"})
-    public void validLoginRedirectsToDashboard() {
+    public void validLoginRedirectsToProductsPage() {
         ProductsPage products = new LoginPage(driver)
                 .login(TestData.VALID_USER, TestData.VALID_PASSWORD);
 
-        Assert.assertEquals(products.getTitle(), "Dashboard",
-                "Expected page title to be 'Dashboard' but found '" + products.getTitle() + "'");
+        Assert.assertEquals(products.getTitle(), TestData.PRODUCTS_TITLE,
+                "Expected page title to be '" + TestData.PRODUCTS_TITLE
+                        + "' but found '" + products.getTitle() + "'");
     }
 
     @Severity(SeverityLevel.NORMAL)
