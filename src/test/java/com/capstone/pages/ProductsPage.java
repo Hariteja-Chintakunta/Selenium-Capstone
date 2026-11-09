@@ -3,6 +3,7 @@
 package com.capstone.pages;
 
 import io.qameta.allure.Step;
+import com.capstone.utils.FailureHighlight;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -28,11 +29,13 @@ public class ProductsPage extends BasePage {
     }
 
     public int getProductCount() {
+        FailureHighlight.setTarget(productNames);
         waits.waitForVisible(productNames);
         return driver.findElements(productNames).size();
     }
 
     public List<String> getProductNames() {
+        FailureHighlight.setTarget(productNames);
         waits.waitForVisible(productNames);
         return driver.findElements(productNames).stream()
                 .map(WebElement::getText)
@@ -40,6 +43,7 @@ public class ProductsPage extends BasePage {
     }
 
     public List<Double> getProductPrices() {
+        FailureHighlight.setTarget(productPrices);
         waits.waitForVisible(productPrices);
         return driver.findElements(productPrices).stream()
                 .map(e -> Double.parseDouble(e.getText().replace("$", "")))

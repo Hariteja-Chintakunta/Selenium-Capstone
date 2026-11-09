@@ -2,6 +2,7 @@
 // ABOUTME: Wraps Selenium actions with explicit waits to prevent flaky tests.
 package com.capstone.pages;
 
+import com.capstone.utils.FailureHighlight;
 import com.capstone.utils.WaitUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -32,10 +33,12 @@ public class BasePage {
     }
 
     protected String getText(By locator) {
+        FailureHighlight.setTarget(locator);
         return waits.waitForVisible(locator).getText();
     }
 
     protected boolean isDisplayed(By locator) {
+        FailureHighlight.setTarget(locator);
         try {
             return driver.findElement(locator).isDisplayed();
         } catch (NoSuchElementException e) {
@@ -44,6 +47,7 @@ public class BasePage {
     }
 
     protected List<WebElement> getElements(By locator) {
+        FailureHighlight.setTarget(locator);
         waits.waitForVisible(locator);
         return driver.findElements(locator);
     }

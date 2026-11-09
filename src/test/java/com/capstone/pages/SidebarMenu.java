@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods for menu open/close, navigation links, and app state reset.
 package com.capstone.pages;
 
+import com.capstone.utils.FailureHighlight;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -33,6 +34,7 @@ public class SidebarMenu extends BasePage {
     }
 
     public boolean isMenuOpen() {
+        FailureHighlight.setTarget(menuWrap);
         String hidden = driver.findElement(menuWrap).getAttribute("aria-hidden");
         return "false".equals(hidden);
     }

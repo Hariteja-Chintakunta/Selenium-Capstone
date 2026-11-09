@@ -8,6 +8,7 @@ import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.capstone.base.BaseTest;
+import com.capstone.utils.FailureHighlight;
 import com.capstone.utils.ScreenshotUtil;
 import io.qameta.allure.Allure;
 import org.openqa.selenium.WebDriver;
@@ -38,6 +39,7 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult result) {
+        FailureHighlight.clear();
         ExtentTest test = extent.createTest(
                 result.getTestClass().getRealClass().getSimpleName() + " - " + result.getMethod().getMethodName());
         extentTest.set(test);
@@ -46,6 +48,7 @@ public class TestListener implements ITestListener {
     @Override
     public void onTestSuccess(ITestResult result) {
         extentTest.get().log(Status.PASS, "Test passed: " + result.getMethod().getMethodName());
+        FailureHighlight.clear();
     }
 
     @Override
@@ -56,10 +59,12 @@ public class TestListener implements ITestListener {
 
         WebDriver driver = getDriverFromResult(result);
         if (driver != null) {
-            String screenshotPath = ScreenshotUtil.capture(driver, result.getMethod().getMethodName());
+            String screenshotPath = ScreenshotUtil.capture(
+                    driver, result.getMethod().getMethodName(), FailureHighlight.getTarget());
             test.addScreenCaptureFromPath(screenshotPath);
 
-            byte[] screenshotBytes = ScreenshotUtil.captureAsBytes(driver);
+            byte[] screenshotBytes = ScreenshotUtil.captureAsBytes(
+                    driver, FailureHighlight.getTarget());
             Allure.addAttachment("Failure Screenshot",
                     new ByteArrayInputStream(screenshotBytes));
 
@@ -67,6 +72,7 @@ public class TestListener implements ITestListener {
             test.log(Status.INFO, "Failed at URL: " + currentUrl);
             Allure.addAttachment("Failed URL", "text/plain", currentUrl);
         }
+        FailureHighlight.clear();
     }
 
     @Override
@@ -75,6 +81,7 @@ public class TestListener implements ITestListener {
         if (result.getThrowable() != null) {
             extentTest.get().log(Status.SKIP, "Reason: " + result.getThrowable().getMessage());
         }
+        FailureHighlight.clear();
     }
 
     @Override

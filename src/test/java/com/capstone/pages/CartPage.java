@@ -2,6 +2,7 @@
 // ABOUTME: Provides methods to inspect cart items, remove products, and proceed to checkout.
 package com.capstone.pages;
 
+import com.capstone.utils.FailureHighlight;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -23,6 +24,7 @@ public class CartPage extends BasePage {
     }
 
     public int getCartItemCount() {
+        FailureHighlight.setTarget(cartItems);
         List<WebElement> items = driver.findElements(cartItems);
         return items.size();
     }
@@ -58,6 +60,7 @@ public class CartPage extends BasePage {
     }
 
     public boolean isCartEmpty() {
+        FailureHighlight.setTarget(cartItems);
         return driver.findElements(cartItems).isEmpty();
     }
 }
