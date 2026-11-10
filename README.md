@@ -13,9 +13,7 @@ Selenium WebDriver automation framework for [SauceDemo](https://www.saucedemo.co
 ```
 saucedemo-automation/
 ├── pom.xml                          # Maven dependencies and plugins
-├── testng.xml                       # Test suite configuration
-├── testng-smoke.xml                 # Smoke test suite
-├── testng-regression.xml            # Regression test suite
+├── testng.xml                       # Test suite configuration (groups filter smoke/regression)
 ├── src/test/
 │   ├── java/com/capstone/
 │   │   ├── base/
@@ -66,12 +64,12 @@ mvn clean test
 
 Run smoke tests only:
 ```bash
-mvn clean test -Psmoke
+mvn clean test -Dgroups=smoke
 ```
 
 Run regression tests only:
 ```bash
-mvn clean test -Pregression
+mvn clean test -Dgroups=regression
 ```
 
 Run in headless mode:

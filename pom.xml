@@ -15,7 +15,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <allure.version>2.25.0</allure.version>
         <aspectj.version>1.9.21</aspectj.version>
-        <testng.suite>testng.xml</testng.suite>
     </properties>
 
     <dependencies>
@@ -93,21 +92,6 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>smoke</id>
-            <properties>
-                <testng.suite>testng-smoke.xml</testng.suite>
-            </properties>
-        </profile>
-        <profile>
-            <id>regression</id>
-            <properties>
-                <testng.suite>testng-regression.xml</testng.suite>
-            </properties>
-        </profile>
-    </profiles>
-
     <build>
         <plugins>
             <plugin>
@@ -116,7 +100,7 @@
                 <version>3.2.5</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>${testng.suite}</suiteXmlFile>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"

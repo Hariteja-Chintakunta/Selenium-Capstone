@@ -1,5 +1,5 @@
 <!-- ABOUTME: TestNG suite configuration for the saucedemo test automation framework. -->
-<!-- ABOUTME: Organizes tests by module with parallel execution, listeners, and group support. -->
+<!-- ABOUTME: Organizes tests by module with parallel execution and listener support. -->
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="SauceDemo Test Suite" parallel="tests" thread-count="3" verbose="1">
 
@@ -7,49 +7,49 @@
         <listener class-name="com.capstone.listeners.RetryTransformer"/>
     </listeners>
 
-    <test name="Setup Tests">
+    <test name="Site Launch Tests">
         <classes>
             <class name="com.capstone.tests.SiteLaunchTest"/>
         </classes>
     </test>
 
-    <test name="Login Tests">
+    <test name="Authentication Tests">
         <classes>
             <class name="com.capstone.tests.AuthTest"/>
         </classes>
     </test>
 
-    <test name="Product Listing Tests">
+    <test name="Inventory Sorting Tests">
         <classes>
             <class name="com.capstone.tests.InventorySortingTest"/>
         </classes>
     </test>
 
-    <test name="Product Detail Tests">
+    <test name="Item Preview Tests">
         <classes>
             <class name="com.capstone.tests.ItemPreviewTest"/>
         </classes>
     </test>
 
-    <test name="Shopping Cart Tests">
+    <test name="Cart Management Tests">
         <classes>
             <class name="com.capstone.tests.CartManagementTest"/>
         </classes>
     </test>
 
-    <test name="Checkout Tests">
+    <test name="Purchase Flow Tests">
         <classes>
             <class name="com.capstone.tests.PurchaseFlowTest"/>
         </classes>
     </test>
 
-    <test name="Navigation Tests">
+    <test name="Burger Menu Tests">
         <classes>
             <class name="com.capstone.tests.BurgerMenuTest"/>
         </classes>
     </test>
 
-    <test name="End-to-End Tests">
+    <test name="Full Purchase Journey Tests">
         <classes>
             <class name="com.capstone.tests.FullPurchaseJourneyTest"/>
         </classes>
