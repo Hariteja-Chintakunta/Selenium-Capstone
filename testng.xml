@@ -7,6 +7,13 @@
         <listener class-name="com.capstone.listeners.RetryTransformer"/>
     </listeners>
 
+    <!--
+        To run a specific group, pass -Dgroups on the Maven command line:
+            mvn test -Dgroups=smoke
+            mvn test -Dgroups=regression
+        Without -Dgroups, all tests run.
+    -->
+
     <test name="Site Launch Tests">
         <classes>
             <class name="com.capstone.tests.SiteLaunchTest"/>
