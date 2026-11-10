@@ -5,7 +5,7 @@ package com.capstone.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class ProductDetailPage extends BasePage {
+public class ItemPreviewPage extends SwagBasePage {
 
     private final By productName = By.cssSelector("[data-test='inventory-item-name']");
     private final By productDescription = By.cssSelector("[data-test='inventory-item-desc']");
@@ -15,7 +15,7 @@ public class ProductDetailPage extends BasePage {
     private final By backButton = By.id("back-to-products");
     private final By cartBadge = By.className("shopping_cart_badge");
 
-    public ProductDetailPage(WebDriver driver) {
+    public ItemPreviewPage(WebDriver driver) {
         super(driver);
     }
 
@@ -43,8 +43,8 @@ public class ProductDetailPage extends BasePage {
         return isDisplayed(cartBadge);
     }
 
-    public ProductsPage goBackToProducts() {
+    public InventoryPage goBackToProducts() {
         click(backButton);
-        return new ProductsPage(driver);
+        return new InventoryPage(driver);
     }
 }

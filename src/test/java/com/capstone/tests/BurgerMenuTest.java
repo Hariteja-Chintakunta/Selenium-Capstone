@@ -2,11 +2,11 @@
 // ABOUTME: Covers menu open/close, All Items, About, Logout, Reset App State links.
 package com.capstone.tests;
 
-import com.capstone.base.BaseTest;
-import com.capstone.pages.CartPage;
-import com.capstone.pages.LoginPage;
-import com.capstone.pages.ProductsPage;
-import com.capstone.pages.SidebarMenu;
+import com.capstone.base.SwagBaseTest;
+import com.capstone.pages.ShoppingBagPage;
+import com.capstone.pages.AuthPage;
+import com.capstone.pages.InventoryPage;
+import com.capstone.pages.BurgerMenu;
 import com.capstone.utils.TestData;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -18,10 +18,10 @@ import org.testng.annotations.Test;
 
 @Epic("SauceDemo")
 @Feature("Navigation")
-public class NavigationTest extends BaseTest {
+public class BurgerMenuTest extends SwagBaseTest {
 
-    private ProductsPage loginAndGetProductsPage() {
-        return new LoginPage(driver).login(TestData.VALID_USER, TestData.VALID_PASSWORD);
+    private InventoryPage loginAndGetProductsPage() {
+        return new AuthPage(driver).login(TestData.VALID_USER, TestData.VALID_PASSWORD);
     }
 
     @Severity(SeverityLevel.NORMAL)
@@ -29,7 +29,7 @@ public class NavigationTest extends BaseTest {
     @Test(groups = {"regression"})
     public void sidebarMenuOpensAndCloses() {
         loginAndGetProductsPage();
-        SidebarMenu sidebar = new SidebarMenu(driver);
+        BurgerMenu sidebar = new BurgerMenu(driver);
 
         sidebar.openMenu();
         Assert.assertTrue(sidebar.isMenuOpen(), "Menu should be open");
@@ -42,12 +42,12 @@ public class NavigationTest extends BaseTest {
     @Description("Verify All Items link navigates back to the products page")
     @Test(groups = {"regression"})
     public void allItemsLinkGoesToProducts() {
-        ProductsPage products = loginAndGetProductsPage();
-        CartPage cart = products.goToCart();
+        InventoryPage products = loginAndGetProductsPage();
+        ShoppingBagPage cart = products.goToCart();
 
-        SidebarMenu sidebar = new SidebarMenu(driver);
+        BurgerMenu sidebar = new BurgerMenu(driver);
         sidebar.openMenu();
-        ProductsPage returned = sidebar.clickAllItems();
+        InventoryPage returned = sidebar.clickAllItems();
 
         Assert.assertEquals(returned.getTitle(), TestData.PRODUCTS_TITLE,
                 "Should navigate to Products page");
@@ -58,7 +58,7 @@ public class NavigationTest extends BaseTest {
     @Test(groups = {"regression"})
     public void aboutLinkNavigatesToSauceLabs() {
         loginAndGetProductsPage();
-        SidebarMenu sidebar = new SidebarMenu(driver);
+        BurgerMenu sidebar = new BurgerMenu(driver);
         sidebar.openMenu();
         sidebar.clickAbout();
 
@@ -71,9 +71,9 @@ public class NavigationTest extends BaseTest {
     @Test(groups = {"regression"})
     public void logoutLinkReturnsToLogin() {
         loginAndGetProductsPage();
-        SidebarMenu sidebar = new SidebarMenu(driver);
+        BurgerMenu sidebar = new BurgerMenu(driver);
         sidebar.openMenu();
-        LoginPage loginPage = sidebar.clickLogout();
+        AuthPage loginPage = sidebar.clickLogout();
 
         Assert.assertTrue(driver.getCurrentUrl().contains("saucedemo.com"),
                 "Should return to login page");
@@ -85,11 +85,11 @@ public class NavigationTest extends BaseTest {
     @Description("Verify Reset App State clears the cart badge")
     @Test(groups = {"regression"})
     public void resetAppStateClearsCart() {
-        ProductsPage products = loginAndGetProductsPage();
+        InventoryPage products = loginAndGetProductsPage();
         products.addToCart(products.getProductNames().get(0));
         Assert.assertEquals(products.getCartBadgeCount(), 1, "Cart badge should show 1");
 
-        SidebarMenu sidebar = new SidebarMenu(driver);
+        BurgerMenu sidebar = new BurgerMenu(driver);
         sidebar.openMenu();
         sidebar.clickResetAppState();
         sidebar.closeMenu();
@@ -103,7 +103,7 @@ public class NavigationTest extends BaseTest {
     @Test(groups = {"regression"})
     public void menuIsNotVisibleByDefault() {
         loginAndGetProductsPage();
-        SidebarMenu sidebar = new SidebarMenu(driver);
+        BurgerMenu sidebar = new BurgerMenu(driver);
         Assert.assertFalse(sidebar.isMenuOpen(),
                 "Menu should be closed by default");
     }

@@ -7,7 +7,7 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class SidebarMenu extends BasePage {
+public class BurgerMenu extends SwagBasePage {
 
     private final By menuButton = By.id("react-burger-menu-btn");
     private final By closeButton = By.id("react-burger-cross-btn");
@@ -17,7 +17,7 @@ public class SidebarMenu extends BasePage {
     private final By logoutLink = By.id("logout_sidebar_link");
     private final By resetLink = By.id("reset_sidebar_link");
 
-    public SidebarMenu(WebDriver driver) {
+    public BurgerMenu(WebDriver driver) {
         super(driver);
     }
 
@@ -40,9 +40,9 @@ public class SidebarMenu extends BasePage {
     }
 
     @Step("Click All Items link")
-    public ProductsPage clickAllItems() {
+    public InventoryPage clickAllItems() {
         click(allItemsLink);
-        return new ProductsPage(driver);
+        return new InventoryPage(driver);
     }
 
     @Step("Click About link")
@@ -51,9 +51,9 @@ public class SidebarMenu extends BasePage {
     }
 
     @Step("Click Logout link")
-    public LoginPage clickLogout() {
+    public AuthPage clickLogout() {
         click(logoutLink);
-        return new LoginPage(driver);
+        return new AuthPage(driver);
     }
 
     @Step("Click Reset App State")

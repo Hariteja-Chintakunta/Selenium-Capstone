@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CartPage extends BasePage {
+public class ShoppingBagPage extends SwagBasePage {
 
     private final By cartItems = By.className("cart_item");
     private final By itemNames = By.className("inventory_item_name");
@@ -19,7 +19,7 @@ public class CartPage extends BasePage {
     private final By continueShoppingButton = By.id("continue-shopping");
     private final By checkoutButton = By.id("checkout");
 
-    public CartPage(WebDriver driver) {
+    public ShoppingBagPage(WebDriver driver) {
         super(driver);
     }
 
@@ -48,15 +48,15 @@ public class CartPage extends BasePage {
     }
 
     @Step("Click continue shopping")
-    public ProductsPage clickContinueShopping() {
+    public InventoryPage clickContinueShopping() {
         click(continueShoppingButton);
-        return new ProductsPage(driver);
+        return new InventoryPage(driver);
     }
 
     @Step("Proceed to checkout")
-    public CheckoutStepOnePage clickCheckout() {
+    public BuyerInfoPage clickCheckout() {
         click(checkoutButton);
-        return new CheckoutStepOnePage(driver);
+        return new BuyerInfoPage(driver);
     }
 
     public boolean isCartEmpty() {

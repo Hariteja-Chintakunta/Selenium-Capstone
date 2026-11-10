@@ -2,7 +2,7 @@
 // ABOUTME: Covers complete checkout, empty/missing fields errors, order summary, and price math.
 package com.capstone.tests;
 
-import com.capstone.base.BaseTest;
+import com.capstone.base.SwagBaseTest;
 import com.capstone.pages.*;
 import com.capstone.utils.TestData;
 import io.qameta.allure.Description;
@@ -17,10 +17,10 @@ import java.util.List;
 
 @Epic("SauceDemo")
 @Feature("Checkout")
-public class CheckoutTest extends BaseTest {
+public class PurchaseFlowTest extends SwagBaseTest {
 
-    private CartPage addItemAndGoToCart() {
-        ProductsPage products = new LoginPage(driver)
+    private ShoppingBagPage addItemAndGoToCart() {
+        InventoryPage products = new AuthPage(driver)
                 .login(TestData.VALID_USER, TestData.VALID_PASSWORD);
         String firstProduct = products.getProductNames().get(0);
         products.addToCart(firstProduct);
@@ -31,11 +31,11 @@ public class CheckoutTest extends BaseTest {
     @Description("Verify the full checkout flow completes with an order confirmation message")
     @Test(groups = {"smoke", "regression"})
     public void completeCheckoutShowsConfirmation() {
-        CartPage cart = addItemAndGoToCart();
-        CheckoutStepOnePage stepOne = cart.clickCheckout();
+        ShoppingBagPage cart = addItemAndGoToCart();
+        BuyerInfoPage stepOne = cart.clickCheckout();
         stepOne.fillForm(TestData.FIRST_NAME, TestData.LAST_NAME, TestData.ZIP_CODE);
-        CheckoutStepTwoPage stepTwo = stepOne.clickContinue();
-        CheckoutCompletePage complete = stepTwo.clickFinish();
+        OrderSummaryPage stepTwo = stepOne.clickContinue();
+        OrderConfirmationPage complete = stepTwo.clickFinish();
 
         Assert.assertEquals(complete.getConfirmationHeader(), TestData.ORDER_CONFIRMATION,
                 "Order confirmation message should be displayed");
@@ -45,8 +45,8 @@ public class CheckoutTest extends BaseTest {
     @Description("Verify submitting an empty checkout form shows first name required error")
     @Test(groups = {"regression"})
     public void emptyFormShowsFirstNameError() {
-        CartPage cart = addItemAndGoToCart();
-        CheckoutStepOnePage stepOne = cart.clickCheckout();
+        ShoppingBagPage cart = addItemAndGoToCart();
+        BuyerInfoPage stepOne = cart.clickCheckout();
         stepOne.clickContinueExpectingError();
 
         Assert.assertTrue(stepOne.getErrorMessage().contains(TestData.ERROR_FIRSTNAME_REQUIRED),
@@ -57,8 +57,8 @@ public class CheckoutTest extends BaseTest {
     @Description("Verify missing last name shows last name required error")
     @Test(groups = {"regression"})
     public void missingLastNameShowsError() {
-        CartPage cart = addItemAndGoToCart();
-        CheckoutStepOnePage stepOne = cart.clickCheckout();
+        ShoppingBagPage cart = addItemAndGoToCart();
+        BuyerInfoPage stepOne = cart.clickCheckout();
         stepOne.fillForm(TestData.FIRST_NAME, "", "");
         stepOne.clickContinueExpectingError();
 
@@ -70,8 +70,8 @@ public class CheckoutTest extends BaseTest {
     @Description("Verify missing zip code shows postal code required error")
     @Test(groups = {"regression"})
     public void missingZipCodeShowsError() {
-        CartPage cart = addItemAndGoToCart();
-        CheckoutStepOnePage stepOne = cart.clickCheckout();
+        ShoppingBagPage cart = addItemAndGoToCart();
+        BuyerInfoPage stepOne = cart.clickCheckout();
         stepOne.fillForm(TestData.FIRST_NAME, TestData.LAST_NAME, "");
         stepOne.clickContinueExpectingError();
 
@@ -83,16 +83,16 @@ public class CheckoutTest extends BaseTest {
     @Description("Verify the order summary page lists all items added to the cart")
     @Test(groups = {"regression"})
     public void orderSummaryShowsCorrectItems() {
-        ProductsPage products = new LoginPage(driver)
+        InventoryPage products = new AuthPage(driver)
                 .login(TestData.VALID_USER, TestData.VALID_PASSWORD);
         List<String> names = products.getProductNames();
         products.addToCart(names.get(0));
         products.addToCart(names.get(1));
 
-        CartPage cart = products.goToCart();
-        CheckoutStepOnePage stepOne = cart.clickCheckout();
+        ShoppingBagPage cart = products.goToCart();
+        BuyerInfoPage stepOne = cart.clickCheckout();
         stepOne.fillForm(TestData.FIRST_NAME, TestData.LAST_NAME, TestData.ZIP_CODE);
-        CheckoutStepTwoPage stepTwo = stepOne.clickContinue();
+        OrderSummaryPage stepTwo = stepOne.clickContinue();
 
         List<String> summaryItems = stepTwo.getItemNames();
         Assert.assertTrue(summaryItems.contains(names.get(0)),
@@ -105,10 +105,10 @@ public class CheckoutTest extends BaseTest {
     @Description("Verify total price equals item subtotal plus tax")
     @Test(groups = {"regression"})
     public void priceTotalCalculationIsCorrect() {
-        CartPage cart = addItemAndGoToCart();
-        CheckoutStepOnePage stepOne = cart.clickCheckout();
+        ShoppingBagPage cart = addItemAndGoToCart();
+        BuyerInfoPage stepOne = cart.clickCheckout();
         stepOne.fillForm(TestData.FIRST_NAME, TestData.LAST_NAME, TestData.ZIP_CODE);
-        CheckoutStepTwoPage stepTwo = stepOne.clickContinue();
+        OrderSummaryPage stepTwo = stepOne.clickContinue();
 
         double itemTotal = stepTwo.getItemTotalAsDouble();
         double tax = stepTwo.getTaxAsDouble();
@@ -122,9 +122,9 @@ public class CheckoutTest extends BaseTest {
     @Description("Verify cancel on checkout step one returns to the cart page")
     @Test(groups = {"regression"})
     public void cancelOnStepOneReturnsToCart() {
-        CartPage cart = addItemAndGoToCart();
-        CheckoutStepOnePage stepOne = cart.clickCheckout();
-        CartPage returned = stepOne.clickCancel();
+        ShoppingBagPage cart = addItemAndGoToCart();
+        BuyerInfoPage stepOne = cart.clickCheckout();
+        ShoppingBagPage returned = stepOne.clickCancel();
 
         Assert.assertTrue(driver.getCurrentUrl().contains("cart"),
                 "Should return to cart page");
@@ -134,11 +134,11 @@ public class CheckoutTest extends BaseTest {
     @Description("Verify cancel on checkout step two returns to the products page")
     @Test(groups = {"regression"})
     public void cancelOnStepTwoReturnsToProducts() {
-        CartPage cart = addItemAndGoToCart();
-        CheckoutStepOnePage stepOne = cart.clickCheckout();
+        ShoppingBagPage cart = addItemAndGoToCart();
+        BuyerInfoPage stepOne = cart.clickCheckout();
         stepOne.fillForm(TestData.FIRST_NAME, TestData.LAST_NAME, TestData.ZIP_CODE);
-        CheckoutStepTwoPage stepTwo = stepOne.clickContinue();
-        ProductsPage products = stepTwo.clickCancel();
+        OrderSummaryPage stepTwo = stepOne.clickContinue();
+        InventoryPage products = stepTwo.clickCancel();
 
         Assert.assertEquals(products.getTitle(), TestData.PRODUCTS_TITLE,
                 "Should return to Products page");

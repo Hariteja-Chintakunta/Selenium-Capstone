@@ -2,9 +2,9 @@
 // ABOUTME: Covers sort by name (A-Z, Z-A), sort by price (low-high, high-low), and data validation.
 package com.capstone.tests;
 
-import com.capstone.base.BaseTest;
-import com.capstone.pages.LoginPage;
-import com.capstone.pages.ProductsPage;
+import com.capstone.base.SwagBaseTest;
+import com.capstone.pages.AuthPage;
+import com.capstone.pages.InventoryPage;
 import com.capstone.utils.TestData;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -20,17 +20,17 @@ import java.util.List;
 
 @Epic("SauceDemo")
 @Feature("Product Listing")
-public class ProductListingTest extends BaseTest {
+public class InventorySortingTest extends SwagBaseTest {
 
-    private ProductsPage loginAndGetProductsPage() {
-        return new LoginPage(driver).login(TestData.VALID_USER, TestData.VALID_PASSWORD);
+    private InventoryPage loginAndGetProductsPage() {
+        return new AuthPage(driver).login(TestData.VALID_USER, TestData.VALID_PASSWORD);
     }
 
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify product listing page displays exactly 6 products")
     @Test(groups = {"smoke", "regression"})
     public void productCountIsSix() {
-        ProductsPage products = loginAndGetProductsPage();
+        InventoryPage products = loginAndGetProductsPage();
         Assert.assertEquals(products.getProductCount(), TestData.EXPECTED_PRODUCT_COUNT,
                 "Product count should be " + TestData.EXPECTED_PRODUCT_COUNT);
     }
@@ -39,7 +39,7 @@ public class ProductListingTest extends BaseTest {
     @Description("Verify products are sorted alphabetically A-Z by default")
     @Test(groups = {"regression"})
     public void productsAreSortedByNameAToZByDefault() {
-        ProductsPage products = loginAndGetProductsPage();
+        InventoryPage products = loginAndGetProductsPage();
         List<String> names = products.getProductNames();
         List<String> sorted = new ArrayList<>(names);
         Collections.sort(sorted);
@@ -50,7 +50,7 @@ public class ProductListingTest extends BaseTest {
     @Description("Verify sort by Name Z-A produces reverse alphabetical order")
     @Test(groups = {"regression"})
     public void sortByNameZToA() {
-        ProductsPage products = loginAndGetProductsPage();
+        InventoryPage products = loginAndGetProductsPage();
         products.sortBy("Name (Z to A)");
         List<String> names = products.getProductNames();
         List<String> sorted = new ArrayList<>(names);
@@ -62,7 +62,7 @@ public class ProductListingTest extends BaseTest {
     @Description("Verify sort by Price low-to-high produces ascending prices")
     @Test(groups = {"regression"})
     public void sortByPriceLowToHigh() {
-        ProductsPage products = loginAndGetProductsPage();
+        InventoryPage products = loginAndGetProductsPage();
         products.sortBy("Price (low to high)");
         List<Double> prices = products.getProductPrices();
         List<Double> sorted = new ArrayList<>(prices);
@@ -74,7 +74,7 @@ public class ProductListingTest extends BaseTest {
     @Description("Verify sort by Price high-to-low produces descending prices")
     @Test(groups = {"regression"})
     public void sortByPriceHighToLow() {
-        ProductsPage products = loginAndGetProductsPage();
+        InventoryPage products = loginAndGetProductsPage();
         products.sortBy("Price (high to low)");
         List<Double> prices = products.getProductPrices();
         List<Double> sorted = new ArrayList<>(prices);
@@ -86,7 +86,7 @@ public class ProductListingTest extends BaseTest {
     @Description("Verify no product has an empty name string")
     @Test(groups = {"regression"})
     public void productNamesAreNotEmpty() {
-        ProductsPage products = loginAndGetProductsPage();
+        InventoryPage products = loginAndGetProductsPage();
         List<String> names = products.getProductNames();
         for (String name : names) {
             Assert.assertFalse(name.trim().isEmpty(), "Product name should not be empty");
@@ -97,7 +97,7 @@ public class ProductListingTest extends BaseTest {
     @Description("Verify all product prices are greater than zero")
     @Test(groups = {"regression"})
     public void productPricesArePositive() {
-        ProductsPage products = loginAndGetProductsPage();
+        InventoryPage products = loginAndGetProductsPage();
         List<Double> prices = products.getProductPrices();
         for (Double price : prices) {
             Assert.assertTrue(price > 0, "Product price should be positive, got: " + price);

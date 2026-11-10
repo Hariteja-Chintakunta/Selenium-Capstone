@@ -7,7 +7,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
-import com.capstone.base.BaseTest;
+import com.capstone.base.SwagBaseTest;
 import com.capstone.utils.FailureHighlight;
 import com.capstone.utils.ScreenshotUtil;
 import io.qameta.allure.Allure;
@@ -93,8 +93,8 @@ public class TestListener implements ITestListener {
 
     private WebDriver getDriverFromResult(ITestResult result) {
         Object testInstance = result.getInstance();
-        if (testInstance instanceof BaseTest) {
-            return ((BaseTest) testInstance).getDriver();
+        if (testInstance instanceof SwagBaseTest) {
+            return ((SwagBaseTest) testInstance).getDriver();
         }
         return null;
     }

@@ -6,12 +6,12 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class CheckoutCompletePage extends BasePage {
+public class OrderConfirmationPage extends SwagBasePage {
 
     private final By completeHeader = By.className("complete-header");
     private final By backHomeButton = By.id("back-to-products");
 
-    public CheckoutCompletePage(WebDriver driver) {
+    public OrderConfirmationPage(WebDriver driver) {
         super(driver);
     }
 
@@ -20,8 +20,8 @@ public class CheckoutCompletePage extends BasePage {
     }
 
     @Step("Return to products from order confirmation")
-    public ProductsPage clickBackHome() {
+    public InventoryPage clickBackHome() {
         click(backHomeButton);
-        return new ProductsPage(driver);
+        return new InventoryPage(driver);
     }
 }

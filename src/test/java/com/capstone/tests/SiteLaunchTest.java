@@ -2,7 +2,7 @@
 // ABOUTME: Validates basic setup before running the full test suite.
 package com.capstone.tests;
 
-import com.capstone.base.BaseTest;
+import com.capstone.base.SwagBaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 
 @Epic("SauceDemo")
 @Feature("Setup")
-public class SetupCheckTest extends BaseTest {
+public class SiteLaunchTest extends SwagBaseTest {
 
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify the browser loads saucedemo.com and the page title is Swag Labs")

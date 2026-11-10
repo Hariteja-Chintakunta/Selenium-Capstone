@@ -3,68 +3,55 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="SauceDemo Test Suite" parallel="tests" thread-count="3" verbose="1">
 
-    <groups>
-        <define name="smoke">
-            <include name="smoke"/>
-        </define>
-        <define name="regression">
-            <include name="regression"/>
-        </define>
-        <run>
-            <include name="smoke"/>
-            <include name="regression"/>
-        </run>
-    </groups>
-
     <listeners>
         <listener class-name="com.capstone.listeners.RetryTransformer"/>
     </listeners>
 
     <test name="Setup Tests">
         <classes>
-            <class name="com.capstone.tests.SetupCheckTest"/>
+            <class name="com.capstone.tests.SiteLaunchTest"/>
         </classes>
     </test>
 
     <test name="Login Tests">
         <classes>
-            <class name="com.capstone.tests.LoginTest"/>
+            <class name="com.capstone.tests.AuthTest"/>
         </classes>
     </test>
 
     <test name="Product Listing Tests">
         <classes>
-            <class name="com.capstone.tests.ProductListingTest"/>
+            <class name="com.capstone.tests.InventorySortingTest"/>
         </classes>
     </test>
 
     <test name="Product Detail Tests">
         <classes>
-            <class name="com.capstone.tests.ProductDetailTest"/>
+            <class name="com.capstone.tests.ItemPreviewTest"/>
         </classes>
     </test>
 
     <test name="Shopping Cart Tests">
         <classes>
-            <class name="com.capstone.tests.ShoppingCartTest"/>
+            <class name="com.capstone.tests.CartManagementTest"/>
         </classes>
     </test>
 
     <test name="Checkout Tests">
         <classes>
-            <class name="com.capstone.tests.CheckoutTest"/>
+            <class name="com.capstone.tests.PurchaseFlowTest"/>
         </classes>
     </test>
 
     <test name="Navigation Tests">
         <classes>
-            <class name="com.capstone.tests.NavigationTest"/>
+            <class name="com.capstone.tests.BurgerMenuTest"/>
         </classes>
     </test>
 
     <test name="End-to-End Tests">
         <classes>
-            <class name="com.capstone.tests.EndToEndTest"/>
+            <class name="com.capstone.tests.FullPurchaseJourneyTest"/>
         </classes>
     </test>
 </suite>

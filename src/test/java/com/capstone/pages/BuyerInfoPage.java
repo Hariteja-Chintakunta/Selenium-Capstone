@@ -6,7 +6,7 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class CheckoutStepOnePage extends BasePage {
+public class BuyerInfoPage extends SwagBasePage {
 
     private final By firstNameField = By.id("first-name");
     private final By lastNameField = By.id("last-name");
@@ -15,7 +15,7 @@ public class CheckoutStepOnePage extends BasePage {
     private final By cancelButton = By.id("cancel");
     private final By errorMessage = By.cssSelector("[data-test='error']");
 
-    public CheckoutStepOnePage(WebDriver driver) {
+    public BuyerInfoPage(WebDriver driver) {
         super(driver);
     }
 
@@ -27,20 +27,20 @@ public class CheckoutStepOnePage extends BasePage {
     }
 
     @Step("Continue to checkout step two")
-    public CheckoutStepTwoPage clickContinue() {
+    public OrderSummaryPage clickContinue() {
         click(continueButton);
-        return new CheckoutStepTwoPage(driver);
+        return new OrderSummaryPage(driver);
     }
 
-    public CheckoutStepOnePage clickContinueExpectingError() {
+    public BuyerInfoPage clickContinueExpectingError() {
         click(continueButton);
         return this;
     }
 
     @Step("Cancel checkout")
-    public CartPage clickCancel() {
+    public ShoppingBagPage clickCancel() {
         click(cancelButton);
-        return new CartPage(driver);
+        return new ShoppingBagPage(driver);
     }
 
     public String getErrorMessage() {

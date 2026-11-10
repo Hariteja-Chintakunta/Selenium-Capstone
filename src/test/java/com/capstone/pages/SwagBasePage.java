@@ -12,12 +12,12 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
-public class BasePage {
+public class SwagBasePage {
 
     protected WebDriver driver;
     protected WaitUtils waits;
 
-    public BasePage(WebDriver driver) {
+    public SwagBasePage(WebDriver driver) {
         this.driver = driver;
         this.waits = new WaitUtils(driver);
     }

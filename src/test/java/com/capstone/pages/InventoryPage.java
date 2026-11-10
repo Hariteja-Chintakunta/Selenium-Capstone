@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductsPage extends BasePage {
+public class InventoryPage extends SwagBasePage {
 
     private final By title = By.cssSelector("[data-test='title']");
     private final By productNames = By.className("inventory_item_name");
@@ -20,7 +20,7 @@ public class ProductsPage extends BasePage {
     private final By cartLink = By.className("shopping_cart_link");
     private final By cartBadge = By.className("shopping_cart_badge");
 
-    public ProductsPage(WebDriver driver) {
+    public InventoryPage(WebDriver driver) {
         super(driver);
     }
 
@@ -56,12 +56,12 @@ public class ProductsPage extends BasePage {
     }
 
     @Step("Open product detail: {name}")
-    public ProductDetailPage clickProduct(String name) {
+    public ItemPreviewPage clickProduct(String name) {
         List<WebElement> names = getElements(productNames);
         for (WebElement el : names) {
             if (el.getText().equals(name)) {
                 el.click();
-                return new ProductDetailPage(driver);
+                return new ItemPreviewPage(driver);
             }
         }
         throw new RuntimeException("Product not found: " + name);
@@ -91,14 +91,14 @@ public class ProductsPage extends BasePage {
     }
 
     @Step("Navigate to cart")
-    public CartPage goToCart() {
+    public ShoppingBagPage goToCart() {
         click(cartLink);
-        return new CartPage(driver);
+        return new ShoppingBagPage(driver);
     }
 
     @Step("Logout via sidebar menu")
-    public LoginPage logout() {
-        SidebarMenu sidebar = new SidebarMenu(driver);
+    public AuthPage logout() {
+        BurgerMenu sidebar = new BurgerMenu(driver);
         sidebar.openMenu();
         return sidebar.clickLogout();
     }

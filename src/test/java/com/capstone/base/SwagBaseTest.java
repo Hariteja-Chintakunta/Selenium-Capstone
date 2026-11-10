@@ -16,7 +16,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 
 @Listeners(TestListener.class)
-public class BaseTest {
+public class SwagBaseTest {
 
     protected WebDriver driver;
 

@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CheckoutStepTwoPage extends BasePage {
+public class OrderSummaryPage extends SwagBasePage {
 
     private final By itemNames = By.className("inventory_item_name");
     private final By itemTotal = By.className("summary_subtotal_label");
@@ -19,7 +19,7 @@ public class CheckoutStepTwoPage extends BasePage {
     private final By finishButton = By.id("finish");
     private final By cancelButton = By.id("cancel");
 
-    public CheckoutStepTwoPage(WebDriver driver) {
+    public OrderSummaryPage(WebDriver driver) {
         super(driver);
     }
 
@@ -42,15 +42,15 @@ public class CheckoutStepTwoPage extends BasePage {
     }
 
     @Step("Finish order")
-    public CheckoutCompletePage clickFinish() {
+    public OrderConfirmationPage clickFinish() {
         click(finishButton);
-        return new CheckoutCompletePage(driver);
+        return new OrderConfirmationPage(driver);
     }
 
     @Step("Cancel order")
-    public ProductsPage clickCancel() {
+    public InventoryPage clickCancel() {
         click(cancelButton);
-        return new ProductsPage(driver);
+        return new InventoryPage(driver);
     }
 
     private double parsePrice(String text) {
