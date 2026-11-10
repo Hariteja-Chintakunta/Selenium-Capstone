@@ -3,17 +3,29 @@
 package com.capstone.pages;
 
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class BuyerInfoPage extends SwagBasePage {
 
-    private final By firstNameField = By.id("first-name");
-    private final By lastNameField = By.id("last-name");
-    private final By zipCodeField = By.id("postal-code");
-    private final By continueButton = By.id("continue");
-    private final By cancelButton = By.id("cancel");
-    private final By errorMessage = By.cssSelector("[data-test='error']");
+    @FindBy(id = "first-name")
+    private WebElement firstNameField;
+
+    @FindBy(id = "last-name")
+    private WebElement lastNameField;
+
+    @FindBy(id = "postal-code")
+    private WebElement zipCodeField;
+
+    @FindBy(id = "continue")
+    private WebElement continueButton;
+
+    @FindBy(id = "cancel")
+    private WebElement cancelButton;
+
+    @FindBy(css = "[data-test='error']")
+    private WebElement errorMessage;
 
     public BuyerInfoPage(WebDriver driver) {
         super(driver);

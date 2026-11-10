@@ -2,41 +2,48 @@
 // ABOUTME: Provides methods to inspect cart items, remove products, and proceed to checkout.
 package com.capstone.pages;
 
-import com.capstone.utils.FailureHighlight;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ShoppingBagPage extends SwagBasePage {
 
-    private final By cartItems = By.className("cart_item");
-    private final By itemNames = By.className("inventory_item_name");
-    private final By itemPrices = By.className("inventory_item_price");
-    private final By continueShoppingButton = By.id("continue-shopping");
-    private final By checkoutButton = By.id("checkout");
+    @FindBy(className = "cart_item")
+    private List<WebElement> cartItems;
+
+    @FindBy(className = "inventory_item_name")
+    private List<WebElement> itemNameElements;
+
+    @FindBy(className = "inventory_item_price")
+    private List<WebElement> itemPriceElements;
+
+    @FindBy(id = "continue-shopping")
+    private WebElement continueShoppingButton;
+
+    @FindBy(id = "checkout")
+    private WebElement checkoutButton;
 
     public ShoppingBagPage(WebDriver driver) {
         super(driver);
     }
 
     public int getCartItemCount() {
-        FailureHighlight.setTarget(cartItems);
-        List<WebElement> items = driver.findElements(cartItems);
-        return items.size();
+        return cartItems.size();
     }
 
     public List<String> getItemNames() {
-        return getElements(itemNames).stream()
+        return waits.waitForPresence(itemNameElements).stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
     }
 
     public List<String> getItemPrices() {
-        return getElements(itemPrices).stream()
+        return waits.waitForPresence(itemPriceElements).stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
     }
@@ -60,7 +67,6 @@ public class ShoppingBagPage extends SwagBasePage {
     }
 
     public boolean isCartEmpty() {
-        FailureHighlight.setTarget(cartItems);
-        return driver.findElements(cartItems).isEmpty();
+        return cartItems.isEmpty();
     }
 }

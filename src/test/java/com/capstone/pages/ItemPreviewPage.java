@@ -2,18 +2,32 @@
 // ABOUTME: Provides methods to read product info, add/remove from cart, and navigate back.
 package com.capstone.pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class ItemPreviewPage extends SwagBasePage {
 
-    private final By productName = By.cssSelector("[data-test='inventory-item-name']");
-    private final By productDescription = By.cssSelector("[data-test='inventory-item-desc']");
-    private final By productPrice = By.cssSelector("[data-test='inventory-item-price']");
-    private final By addToCartButton = By.cssSelector("button[data-test^='add-to-cart']");
-    private final By removeButton = By.cssSelector("button[data-test^='remove']");
-    private final By backButton = By.id("back-to-products");
-    private final By cartBadge = By.className("shopping_cart_badge");
+    @FindBy(css = "[data-test='inventory-item-name']")
+    private WebElement productName;
+
+    @FindBy(css = "[data-test='inventory-item-desc']")
+    private WebElement productDescription;
+
+    @FindBy(css = "[data-test='inventory-item-price']")
+    private WebElement productPrice;
+
+    @FindBy(css = "button[data-test^='add-to-cart']")
+    private WebElement addToCartButton;
+
+    @FindBy(css = "button[data-test^='remove']")
+    private WebElement removeButton;
+
+    @FindBy(id = "back-to-products")
+    private WebElement backButton;
+
+    @FindBy(className = "shopping_cart_badge")
+    private WebElement cartBadge;
 
     public ItemPreviewPage(WebDriver driver) {
         super(driver);

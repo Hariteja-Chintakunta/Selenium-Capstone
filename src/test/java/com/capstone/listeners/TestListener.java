@@ -11,12 +11,15 @@ import com.capstone.base.SwagBaseTest;
 import com.capstone.utils.FailureHighlight;
 import com.capstone.utils.ScreenshotUtil;
 import io.qameta.allure.Allure;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
 import java.io.ByteArrayInputStream;
+import java.util.Base64;
 
 public class TestListener implements ITestListener {
 
@@ -59,12 +62,19 @@ public class TestListener implements ITestListener {
 
         WebDriver driver = getDriverFromResult(result);
         if (driver != null) {
-            String screenshotPath = ScreenshotUtil.capture(
-                    driver, result.getMethod().getMethodName(), FailureHighlight.getTarget());
-            test.addScreenCaptureFromPath(screenshotPath);
+            By highlightLocator = FailureHighlight.getTarget();
+            WebElement highlightElement = FailureHighlight.getTargetElement();
+
+            ScreenshotUtil.capture(
+                    driver, result.getMethod().getMethodName(),
+                    highlightLocator, highlightElement);
 
             byte[] screenshotBytes = ScreenshotUtil.captureAsBytes(
-                    driver, FailureHighlight.getTarget());
+                    driver, highlightLocator, highlightElement);
+
+            String base64Screenshot = Base64.getEncoder().encodeToString(screenshotBytes);
+            test.addScreenCaptureFromBase64String(base64Screenshot);
+
             Allure.addAttachment("Failure Screenshot",
                     new ByteArrayInputStream(screenshotBytes));
 

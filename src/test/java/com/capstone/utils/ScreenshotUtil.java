@@ -2,9 +2,9 @@
 // ABOUTME: Used by TestListener for failure screenshots in Extent and Allure reports.
 package com.capstone.utils;
 
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,12 +21,13 @@ import java.util.List;
 
 public class ScreenshotUtil {
 
-    public static String capture(WebDriver driver, String testName, By highlightTarget) {
+    public static String capture(WebDriver driver, String testName,
+                                 By highlightLocator, WebElement highlightElement) {
         String time = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         Path destination = Paths.get("screenshots", testName + "_" + time + ".png");
         try {
             Files.createDirectories(destination.getParent());
-            highlight(driver, highlightTarget);
+            highlight(driver, highlightLocator, highlightElement);
             File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             Files.copy(source.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -35,23 +36,28 @@ public class ScreenshotUtil {
         return destination.toAbsolutePath().toString();
     }
 
-    public static byte[] captureAsBytes(WebDriver driver, By highlightTarget) {
-        highlight(driver, highlightTarget);
+    public static byte[] captureAsBytes(WebDriver driver,
+                                        By highlightLocator, WebElement highlightElement) {
+        highlight(driver, highlightLocator, highlightElement);
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
-    private static void highlight(WebDriver driver, By locator) {
-        if (locator == null) {
-            return;
-        }
+    private static void highlight(WebDriver driver, By locator, WebElement element) {
+        String script =
+                "arguments[0].style.setProperty('outline', '4px solid #ff0000', 'important');"
+                + "arguments[0].style.setProperty('outline-offset', '3px', 'important');"
+                + "arguments[0].style.setProperty('box-shadow', '0 0 0 4px rgba(255,0,0,.25)', 'important');";
 
-        List<WebElement> elements = driver.findElements(locator);
-        for (WebElement element : elements) {
-            ((JavascriptExecutor) driver).executeScript(
-                    "arguments[0].style.setProperty('outline', '4px solid #ff0000', 'important');"
-                            + "arguments[0].style.setProperty('outline-offset', '3px', 'important');"
-                            + "arguments[0].style.setProperty('box-shadow', '0 0 0 4px rgba(255,0,0,.25)', 'important');",
-                    element);
+        if (locator != null) {
+            List<WebElement> elements = driver.findElements(locator);
+            for (WebElement el : elements) {
+                ((JavascriptExecutor) driver).executeScript(script, el);
+            }
+        } else if (element != null) {
+            try {
+                ((JavascriptExecutor) driver).executeScript(script, element);
+            } catch (Exception ignored) {
+            }
         }
     }
 }

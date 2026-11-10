@@ -3,28 +3,39 @@
 package com.capstone.pages;
 
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderSummaryPage extends SwagBasePage {
 
-    private final By itemNames = By.className("inventory_item_name");
-    private final By itemTotal = By.className("summary_subtotal_label");
-    private final By taxLabel = By.className("summary_tax_label");
-    private final By totalLabel = By.cssSelector("[data-test='total-label']");
-    private final By finishButton = By.id("finish");
-    private final By cancelButton = By.id("cancel");
+    @FindBy(className = "inventory_item_name")
+    private List<WebElement> itemNameElements;
+
+    @FindBy(className = "summary_subtotal_label")
+    private WebElement itemTotal;
+
+    @FindBy(className = "summary_tax_label")
+    private WebElement taxLabel;
+
+    @FindBy(css = "[data-test='total-label']")
+    private WebElement totalLabel;
+
+    @FindBy(id = "finish")
+    private WebElement finishButton;
+
+    @FindBy(id = "cancel")
+    private WebElement cancelButton;
 
     public OrderSummaryPage(WebDriver driver) {
         super(driver);
     }
 
     public List<String> getItemNames() {
-        return getElements(itemNames).stream()
+        return waits.waitForPresence(itemNameElements).stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
     }

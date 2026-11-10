@@ -6,16 +6,33 @@ import com.capstone.utils.FailureHighlight;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class BurgerMenu extends SwagBasePage {
 
-    private final By menuButton = By.id("react-burger-menu-btn");
-    private final By closeButton = By.id("react-burger-cross-btn");
-    private final By menuWrap = By.cssSelector(".bm-menu-wrap");
-    private final By allItemsLink = By.id("inventory_sidebar_link");
-    private final By aboutLink = By.id("about_sidebar_link");
-    private final By logoutLink = By.id("logout_sidebar_link");
-    private final By resetLink = By.id("reset_sidebar_link");
+    @FindBy(id = "react-burger-menu-btn")
+    private WebElement menuButton;
+
+    @FindBy(id = "react-burger-cross-btn")
+    private WebElement closeButton;
+
+    @FindBy(css = ".bm-menu-wrap")
+    private WebElement menuWrap;
+
+    @FindBy(id = "inventory_sidebar_link")
+    private WebElement allItemsLink;
+
+    @FindBy(id = "about_sidebar_link")
+    private WebElement aboutLink;
+
+    @FindBy(id = "logout_sidebar_link")
+    private WebElement logoutLink;
+
+    @FindBy(id = "reset_sidebar_link")
+    private WebElement resetLink;
+
+    private static final By closeButtonLocator = By.id("react-burger-cross-btn");
 
     public BurgerMenu(WebDriver driver) {
         super(driver);
@@ -30,12 +47,12 @@ public class BurgerMenu extends SwagBasePage {
     @Step("Close sidebar menu")
     public void closeMenu() {
         click(closeButton);
-        waits.waitForInvisible(closeButton);
+        waits.waitForInvisible(closeButtonLocator);
     }
 
     public boolean isMenuOpen() {
         FailureHighlight.setTarget(menuWrap);
-        String hidden = driver.findElement(menuWrap).getAttribute("aria-hidden");
+        String hidden = menuWrap.getAttribute("aria-hidden");
         return "false".equals(hidden);
     }
 

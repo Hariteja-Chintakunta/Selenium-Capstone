@@ -3,13 +3,17 @@
 package com.capstone.pages;
 
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class OrderConfirmationPage extends SwagBasePage {
 
-    private final By completeHeader = By.className("complete-header");
-    private final By backHomeButton = By.id("back-to-products");
+    @FindBy(className = "complete-header")
+    private WebElement completeHeader;
+
+    @FindBy(id = "back-to-products")
+    private WebElement backHomeButton;
 
     public OrderConfirmationPage(WebDriver driver) {
         super(driver);

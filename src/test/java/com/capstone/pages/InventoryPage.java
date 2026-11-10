@@ -2,23 +2,35 @@
 // ABOUTME: Provides methods for product browsing, sorting, cart operations, and navigation.
 package com.capstone.pages;
 
-import io.qameta.allure.Step;
 import com.capstone.utils.FailureHighlight;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class InventoryPage extends SwagBasePage {
 
-    private final By title = By.cssSelector("[data-test='title']");
-    private final By productNames = By.className("inventory_item_name");
-    private final By productPrices = By.className("inventory_item_price");
-    private final By sortDropdown = By.className("product_sort_container");
-    private final By cartLink = By.className("shopping_cart_link");
-    private final By cartBadge = By.className("shopping_cart_badge");
+    @FindBy(css = "[data-test='title']")
+    private WebElement title;
+
+    @FindBy(className = "inventory_item_name")
+    private List<WebElement> productNameElements;
+
+    @FindBy(className = "inventory_item_price")
+    private List<WebElement> productPriceElements;
+
+    @FindBy(className = "product_sort_container")
+    private WebElement sortDropdown;
+
+    @FindBy(className = "shopping_cart_link")
+    private WebElement cartLink;
+
+    @FindBy(className = "shopping_cart_badge")
+    private WebElement cartBadge;
 
     public InventoryPage(WebDriver driver) {
         super(driver);
@@ -29,23 +41,17 @@ public class InventoryPage extends SwagBasePage {
     }
 
     public int getProductCount() {
-        FailureHighlight.setTarget(productNames);
-        waits.waitForVisible(productNames);
-        return driver.findElements(productNames).size();
+        return waits.waitForPresence(productNameElements).size();
     }
 
     public List<String> getProductNames() {
-        FailureHighlight.setTarget(productNames);
-        waits.waitForVisible(productNames);
-        return driver.findElements(productNames).stream()
+        return waits.waitForPresence(productNameElements).stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
     }
 
     public List<Double> getProductPrices() {
-        FailureHighlight.setTarget(productPrices);
-        waits.waitForVisible(productPrices);
-        return driver.findElements(productPrices).stream()
+        return waits.waitForPresence(productPriceElements).stream()
                 .map(e -> Double.parseDouble(e.getText().replace("$", "")))
                 .collect(Collectors.toList());
     }
@@ -57,7 +63,7 @@ public class InventoryPage extends SwagBasePage {
 
     @Step("Open product detail: {name}")
     public ItemPreviewPage clickProduct(String name) {
-        List<WebElement> names = getElements(productNames);
+        List<WebElement> names = waits.waitForPresence(productNameElements);
         for (WebElement el : names) {
             if (el.getText().equals(name)) {
                 el.click();

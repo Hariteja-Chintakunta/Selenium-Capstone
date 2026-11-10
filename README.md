@@ -14,29 +14,31 @@ Selenium WebDriver automation framework for [SauceDemo](https://www.saucedemo.co
 saucedemo-automation/
 ├── pom.xml                          # Maven dependencies and plugins
 ├── testng.xml                       # Test suite configuration
+├── testng-smoke.xml                 # Smoke test suite
+├── testng-regression.xml            # Regression test suite
 ├── src/test/
 │   ├── java/com/capstone/
 │   │   ├── base/
-│   │   │   └── BaseTest.java        # Browser setup/teardown
+│   │   │   └── SwagBaseTest.java        # Browser setup/teardown
 │   │   ├── pages/
-│   │   │   ├── BasePage.java        # Common page interactions
-│   │   │   ├── LoginPage.java
-│   │   │   ├── ProductsPage.java
-│   │   │   ├── ProductDetailPage.java
-│   │   │   ├── CartPage.java
-│   │   │   ├── CheckoutStepOnePage.java
-│   │   │   ├── CheckoutStepTwoPage.java
-│   │   │   ├── CheckoutCompletePage.java
-│   │   │   └── SidebarMenu.java
+│   │   │   ├── SwagBasePage.java        # Common page interactions with PageFactory
+│   │   │   ├── AuthPage.java
+│   │   │   ├── InventoryPage.java
+│   │   │   ├── ItemPreviewPage.java
+│   │   │   ├── ShoppingBagPage.java
+│   │   │   ├── BuyerInfoPage.java
+│   │   │   ├── OrderSummaryPage.java
+│   │   │   ├── OrderConfirmationPage.java
+│   │   │   └── BurgerMenu.java
 │   │   ├── tests/
-│   │   │   ├── LoginTest.java       # 6 tests
-│   │   │   ├── ProductListingTest.java  # 7 tests
-│   │   │   ├── ProductDetailTest.java   # 6 tests
-│   │   │   ├── ShoppingCartTest.java    # 7 tests
-│   │   │   ├── CheckoutTest.java        # 8 tests
-│   │   │   ├── NavigationTest.java      # 6 tests
-│   │   │   ├── EndToEndTest.java        # 4 tests
-│   │   │   └── SetupCheckTest.java      # 1 test
+│   │   │   ├── SiteLaunchTest.java          # 1 test
+│   │   │   ├── AuthTest.java               # 7 tests
+│   │   │   ├── InventorySortingTest.java    # 7 tests
+│   │   │   ├── ItemPreviewTest.java         # 6 tests
+│   │   │   ├── CartManagementTest.java      # 7 tests
+│   │   │   ├── PurchaseFlowTest.java        # 8 tests
+│   │   │   ├── BurgerMenuTest.java          # 6 tests
+│   │   │   └── FullPurchaseJourneyTest.java # 4 tests
 │   │   ├── listeners/
 │   │   │   ├── TestListener.java    # Screenshot + Extent + Allure
 │   │   │   ├── RetryAnalyzer.java   # Rerun failed tests
@@ -45,6 +47,7 @@ saucedemo-automation/
 │   │       ├── ConfigReader.java
 │   │       ├── WaitUtils.java
 │   │       ├── ScreenshotUtil.java
+│   │       ├── FailureHighlight.java
 │   │       └── TestData.java
 │   └── resources/
 │       ├── config.properties        # Test configuration
@@ -63,7 +66,12 @@ mvn clean test
 
 Run smoke tests only:
 ```bash
-mvn clean test -Dgroups=smoke
+mvn clean test -Psmoke
+```
+
+Run regression tests only:
+```bash
+mvn clean test -Pregression
 ```
 
 Run in headless mode:
@@ -79,7 +87,7 @@ mvn clean test -Dbrowser=firefox
 ## Reports
 
 ### Extent Reports
-After test execution, open `reports/ExtentReport.html` in a browser.
+After test execution, open `reports/ExtentReport.html` in a browser. Failed test screenshots are embedded directly in the report as base64 images.
 
 ### Allure Reports
 Generate and open Allure report:
@@ -97,15 +105,15 @@ Report will be at `target/site/allure-maven-plugin/index.html`.
 
 | Module | Tests | Coverage |
 |--------|-------|----------|
-| Login | 6 | Valid login, invalid password, empty fields, empty password, locked user, back after logout |
-| Product Listing | 7 | Product count, default sort, Z-A sort, price sort (both), name/price validation |
-| Product Detail | 6 | Name/price/description match, add/remove cart, back navigation |
-| Shopping Cart | 7 | Add single/multiple, remove, item details, continue shopping, empty cart, badge |
-| Checkout | 8 | Complete flow, form validation (3 fields), order summary, price calculation, cancel flows |
-| Navigation | 6 | Menu open/close, All Items, About, Logout, Reset App State, default state |
-| End-to-End | 4 | Single/multi item purchase, add-remove-checkout, return to shop |
-| Setup | 1 | Page title verification |
-| **Total** | **45** | |
+| Site Launch | 1 | Page title verification |
+| Authentication | 7 | Valid login, invalid password, empty fields, empty password, locked user, login redirect, back after logout |
+| Product Sorting | 7 | Product count, default sort, Z-A sort, price sort (both), name/price validation |
+| Item Preview | 6 | Name/price/description match, add/remove cart, back navigation |
+| Cart Management | 7 | Add single/multiple, remove, item details, continue shopping, empty cart, badge |
+| Purchase Flow | 8 | Complete flow, form validation (3 fields), order summary, price calculation, cancel flows |
+| Burger Menu | 6 | Menu open/close, All Items, About, Logout, Reset App State, default state |
+| Full Purchase Journey | 4 | Single/multi item purchase, add-remove-checkout, return to shop |
+| **Total** | **46** | |
 
 ## Configuration
 
@@ -113,7 +121,7 @@ Edit `src/test/resources/config.properties`:
 
 | Property | Default | Description |
 |----------|---------|-------------|
-| browser | chrome | Browser: chrome, firefox, edge |
+| browser | edge | Browser: chrome, firefox, edge |
 | headless | false | Run in headless mode |
 | baseUrl | https://www.saucedemo.com | Application URL |
 | explicitWait | 10 | Explicit wait timeout in seconds |
@@ -121,10 +129,11 @@ Edit `src/test/resources/config.properties`:
 
 ## Key Features
 
-- **Page Object Model** - All locators in page classes, tests call page methods only
+- **Page Object Model with PageFactory** - Locators defined via `@FindBy` annotations, elements initialized by Selenium PageFactory
 - **Explicit Waits** - No Thread.sleep(), all synchronization via WebDriverWait
-- **Auto Screenshot on Failure** - Captured with test name and timestamp
-- **Dual Reporting** - Both Extent Reports and Allure Reports
+- **Auto Screenshot on Failure** - Captured with test name and timestamp, embedded in reports as base64
+- **Failed Element Highlighting** - Red outline applied to the last interacted element before failure
+- **Dual Reporting** - Both Extent Reports (HTML with embedded screenshots) and Allure Reports
 - **Retry Mechanism** - Failed tests automatically retried (configurable)
 - **Parallel Execution** - Test modules run in parallel threads
 - **Config-Driven** - Browser, URL, credentials, timeouts from config.properties
