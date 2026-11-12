@@ -17,7 +17,7 @@ public final class TestData {
     public static final String ZIP_CODE = "12345";
 
     public static final int EXPECTED_PRODUCT_COUNT = 6;
-    public static final String PRODUCTS_TITLE = "Productsss";
+    public static final String PRODUCTS_TITLE = "Products";
     public static final String ORDER_CONFIRMATION = "Thank you for your order!";
 
     public static final String ERROR_USERNAME_REQUIRED = "Username is required";
