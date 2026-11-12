@@ -72,15 +72,9 @@ Run regression tests only:
 mvn clean test -Dgroups=regression
 ```
 
-Run in headless mode:
-```bash
-mvn clean test -Dheadless=true
-```
+Run in headless mode: set `headless=true` in `src/test/resources/config.properties` (browser and headless are read from this file only, not from command-line flags), then run `mvn clean test`.
 
-Run with a different browser:
-```bash
-mvn clean test -Dbrowser=firefox
-```
+Run with a different browser: set `browser=firefox` (or `chrome` / `edge`) in `src/test/resources/config.properties`, then run `mvn clean test`.
 
 ## Reports
 
